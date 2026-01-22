@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Thinkmay Cloud</title>
+  <script src="popup.js"></script>
+</head>
+<body>
+
+<h2>Thinkmay Cloud Access</h2>
+
+<input type="text" id="tokenInput" placeholder="Masukkan token">
+<button onclick="cekToken()">Masuk</button>
+
+<div id="status"></div>
+
+<script>
+async function cekToken() {
+  const token = document.getElementById("tokenInput").value.trim();
+  const res = await fetch("token.json");
+  const data = await res.json();
+
+  if (data[token]) {
+    document.getElementById("status").innerHTML = "✅ Akses diterima sampai: " + data[token];
+  } else {
+    document.getElementById("status").innerHTML = "❌ Token tidak valid";
+  }
+}
+</script>
+
+</body>
+</html>
