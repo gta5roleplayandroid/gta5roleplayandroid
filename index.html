@@ -69,6 +69,8 @@ button{
   justify-content:center;
   gap:10px;
   margin:2px 0;
+  /* Menambahkan margin-bottom untuk memberi jarak ke input token */
+  margin-bottom: 20px;
 }
 .links a{
   padding:10px 14px;
@@ -99,6 +101,62 @@ iframe{
 <body>
 
 <div id="gate">
+  <div id="box">
+    <div>
+      <img src="https://i.imgur.com/7tkRRcQ.jpeg">
+      <h3>Masukkan Token</h3>
+
+      <div class="promo">
+        <b>Aplikasi by</b><br>
+        TikTok @gta5roleplayandroid
+      </div>
+
+      <div class="promo small">
+        Ready <b>STEAM GTA5 ORI</b>, Akun Rockstar <b>Berlicense</b><br>
+        atau ingin <b>Berlangganan</b><br>
+        Silakan Join Discord
+      </div>
+
+      <div class="links">
+        <a href="https://www.tiktok.com/@gta5roleplayandroid" target="_blank">
+          FOLLOW TIKTOK
+        </a>
+        <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
+          JOIN DISCORD
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <input id="t" placeholder="Token akses">
+      <button onclick="go()">MASUK</button>
+      <div id="msg"></div>
+      <div class="source">Sumber Halaman : www.thinkmay.net</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOKENS={
+ "ABC123":true,
+ "TRIAL999":true
+};
+
+function go(){
+ let t=document.getElementById("t").value.trim();
+ if(TOKENS[t]){
+   document.getElementById("gate").remove();
+   document.body.innerHTML+=`
+   <iframe src="https://thinkmay.net"></iframe>
+   `;
+ }else{
+   document.getElementById("msg").innerText="❌ Token salah";
+ }
+}
+</script>
+
+</body>
+</html><div id="gate">
   <div id="box">
     <div>
       <img src="https://i.imgur.com/7tkRRcQ.jpeg">
