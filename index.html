@@ -1,58 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Gate Test</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{
-  margin:0;
-  background:#000;
-  font-family:Arial;
-}
-#gate{
-  position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#000;
-}
-#box{
-  width:90%;
-  max-width:340px;
-  background:#0a0a0f;
-  border:2px solid #00f0ff;
-  border-radius:16px;
-  padding:20px;
-  color:#00f0ff;
-  text-align:center;
-}
-input,button{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  margin-top:10px;
-}
-</style>
-</head>
-
-<body>
-
-<div id="gate">
-  <div id="box">
-    <h3>Masukkan Token</h3>
-    <input id="t" placeholder="Token akses">
-    <button onclick="go()">MASUK</button>
-    <div id="msg"></div>
-  </div>
-</div>
-
 <script>
-function go(){
-  document.getElementById("msg").innerText = "OK JS jalan";
+/* =========================
+   CONFIG
+========================= */
+const WORKER_URL = "tokengta5.lmore000013.workers.dev"; // GANTI URL WORKER
+const TARGET_URL = "https://thinkmay.net";
+
+/* =========================
+   DEVICE ID (AMAN DI ANDROID)
+========================= */
+function getDeviceId(){
+  let id = localStorage.getItem("device_id");
+  if(!id){
+    id = "dev-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+    localStorage.setItem("device_id", id);
+  }
+  return id;
+}
+
+/* =========================
+   TOKEN SUBMIT
+========================= */
+async function go(){
+  const input = document.getElementById("t");
+  const msg   = document.getElementById("msg");
+  const token = input.value.trim();
+
+  if(!token){
+    msg.innerText = "❌ Token belum diisi";
+    return;
+  }
+
+  msg.innerText = "⏳ Mengecek token...";
+
+  try{
+    const res = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: token,
+        device: getDeviceId()
+      })
+    });
+
+    const data = await res.json();
+
+    if(!data.ok){
+      msg.innerText =
+        data.msg === "TOKEN_EXPIRED" ? "❌ Token expired" :
+        data.msg === "TOKEN_USED"    ? "❌ Token sudah dipakai device lain" :
+        "❌ Token salah";
+      return;
+    }
+
+    // ✅ SUKSES
+    document.getElementById("gate").remove();
+    window.location.replace(TARGET_URL);
+
+  }catch(e){
+    msg.innerText = "❌ Gagal koneksi server";
+  }
 }
 </script>
-
-</body>
-</html>
