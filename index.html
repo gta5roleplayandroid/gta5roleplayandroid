@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <title>Thinkmay Cloud Gate</title>
@@ -20,101 +20,108 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:#000;
+  background:rgba(0,0,0,.9);
   z-index:99999;
 }
 
-/* box utama */
+/* box */
 #box{
-  width:90%;
-  max-width:360px;
-  background:#0a0a0f;
-  border:2px solid #00f0ff;
+  width:85%;
+  max-width:320px; /* lebih kecil / tidak terlalu zoom */
+  background:#0b0b10;
   border-radius:18px;
-  padding:22px 18px;
+  padding:18px 16px 16px;
   text-align:center;
-  box-shadow:0 0 25px #00f0ff;
-  color:#00f0ff;
+  color:#bffcff;
+  box-shadow:
+    0 0 0 2px #00f0ff,
+    0 0 25px rgba(0,240,255,.9);
 }
 
 /* logo */
 #box img{
-  width:90px;
+  width:80px;
+  height:80px;
   border-radius:50%;
   border:3px solid #ff00ff;
-  margin:0 auto 10px;
+  margin:2px auto 10px;
+  display:block;
 }
 
-/* judul */
-h3{
-  margin:6px 0 10px;
-  font-size:20px;
-}
-
-/* teks promo */
-.promo{
-  font-size:14px;
-  color:#ccc;
+/* text */
+.title{
+  font-size:15px;
+  font-weight:bold;
   margin-bottom:6px;
 }
-.promo.small{
+
+.by{
   font-size:13px;
-  color:#aaa;
-  line-height:1.4;
+  color:#9ff;
+  margin-bottom:8px;
 }
 
-/* tombol link */
+.desc{
+  font-size:12.5px;
+  color:#cfcfcf;
+  line-height:1.45;
+  margin-bottom:14px;
+}
+
+/* buttons link */
 .links{
   display:flex;
+  flex-direction:column;
   gap:10px;
-  margin:12px 0 16px;
-}
-.links a{
-  flex:1;
-  padding:10px 0;
-  border-radius:10px;
-  background:linear-gradient(90deg,#00f0ff,#ff00ff);
-  color:#000;
-  font-size:13px;
-  text-decoration:none;
-  font-weight:bold;
+  margin-bottom:14px;
 }
 
-/* input token */
-input{
+.links a{
   width:100%;
-  padding:14px;
+  padding:12px 0;
   border-radius:12px;
-  border:none;
-  margin-bottom:10px;
-  text-align:center;
+  background:linear-gradient(90deg,#00f0ff,#ff00ff);
+  color:#000;
+  text-decoration:none;
+  font-weight:bold;
   font-size:14px;
 }
 
-/* tombol masuk */
+/* token */
+input{
+  width:100%;
+  box-sizing:border-box;
+  padding:13px;
+  border-radius:12px;
+  border:none;
+  text-align:center;
+  font-size:14px;
+  margin-bottom:10px;
+}
+
+/* masuk */
 button{
   width:100%;
-  padding:14px;
-  border:none;
+  padding:13px;
   border-radius:12px;
+  border:none;
   font-weight:bold;
   font-size:15px;
   background:linear-gradient(90deg,#00f0ff,#ff00ff);
-  cursor:pointer;
 }
 
-/* pesan */
+/* msg */
 #msg{
-  margin-top:8px;
-  font-size:13px;
-  color:#ff6666;
+  margin-top:6px;
+  font-size:12px;
+  color:#ff6b6b;
 }
 
 /* footer */
-.source{
-  margin-top:12px;
+.footer{
+  margin-top:10px;
   font-size:11px;
-  color:#666;
+  color:#777;
 }
 
 /* iframe */
@@ -135,41 +142,44 @@ iframe{
 
     <img src="https://i.imgur.com/7tkRRcQ.jpeg">
 
-    <h3>Masukkan Token</h3>
-
-    <div class="promo">
+    <div class="by">
       <b>Aplikasi by</b><br>
-      TikTok @gta5roleplayandroid
+      TikTok @gta5roleplaydihandphone
     </div>
 
-    <div class="promo small">
-      Ready <b>STEAM GTA5 ORI</b>, Akun Rockstar <b>Berlicense</b><br>
-      atau ingin <b>Berlangganan</b><br>
-      Silakan Join Discord
+    <div class="desc">
+      Ready Akun Steam <b>GTA 5 Original</b>, Akun Rockstar
+      <b>Berlicense</b> Atau Berlangganan Cloud Thinkmay<br>
+      Silakan Join Discord untuk info & order
     </div>
 
     <div class="links">
       <a href="https://www.tiktok.com/@gta5roleplayandroid" target="_blank">
-        FOLLOW TIKTOK
+        Follow TikTok
       </a>
       <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
-        JOIN DISCORD
+        Join Discord
       </a>
     </div>
 
+    <!-- TOKEN (SIMETRIS) -->
     <input id="t" placeholder="Token akses">
     <button onclick="go()">MASUK</button>
 
     <div id="msg"></div>
-    <div class="source">Sumber Halaman : www.thinkmay.net</div>
+
+    <div class="footer">
+      Popup akan tertutup dalam 5 detik<br>
+      Sumber halaman : www.thinkmay.net
+    </div>
 
   </div>
 </div>
 
 <script>
 const TOKENS={
- "ABC123":true,
- "TRIAL999":true
+  "ABC123":true,
+  "TRIAL999":true
 };
 
 function go(){
