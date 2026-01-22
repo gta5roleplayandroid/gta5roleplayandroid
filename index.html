@@ -1,197 +1,44 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Thinkmay Cloud Gate</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{
-  margin:0;
-  background:#000;
-  font-family:Arial, sans-serif;
-  overflow:hidden;
-}
-
-/* overlay */
-#gate{
-  position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:rgba(0,0,0,.9);
-  z-index:99999;
-}
-
-/* box */
-#box{
-  width:85%;
-  max-width:320px; /* lebih kecil / tidak terlalu zoom */
-  background:#0b0b10;
-  border-radius:18px;
-  padding:18px 16px 16px;
-  text-align:center;
-  color:#bffcff;
-  box-shadow:
-    0 0 0 2px #00f0ff,
-    0 0 25px rgba(0,240,255,.9);
-}
-
-/* logo */
-#box img{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  border:3px solid #ff00ff;
-  margin:2px auto 10px;
-  display:block;
-}
-
-/* text */
-.title{
-  font-size:15px;
-  font-weight:bold;
-  margin-bottom:6px;
-}
-
-.by{
-  font-size:13px;
-  color:#9ff;
-  margin-bottom:8px;
-}
-
-.desc{
-  font-size:12.5px;
-  color:#cfcfcf;
-  line-height:1.45;
-  margin-bottom:14px;
-}
-
-/* buttons link */
-.links{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-bottom:14px;
-}
-
-.links a{
-  width:100%;
-  padding:12px 0;
-  border-radius:12px;
-  background:linear-gradient(90deg,#00f0ff,#ff00ff);
-  color:#000;
-  text-decoration:none;
-  font-weight:bold;
-  font-size:14px;
-}
-
-/* token */
-input{
-  width:100%;
-  box-sizing:border-box;
-  padding:13px;
-  border-radius:12px;
-  border:none;
-  text-align:center;
-  font-size:14px;
-  margin-bottom:10px;
-}
-
-/* masuk */
-button{
-  width:100%;
-  padding:13px;
-  border-radius:12px;
-  border:none;
-  font-weight:bold;
-  font-size:15px;
-  background:linear-gradient(90deg,#00f0ff,#ff00ff);
-}
-
-/* msg */
-#msg{
-  margin-top:6px;
-  font-size:12px;
-  color:#ff6b6b;
-}
-
-/* footer */
-.footer{
-  margin-top:10px;
-  font-size:11px;
-  color:#777;
-}
-
-/* iframe */
-iframe{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  border:0;
-}
-</style>
-</head>
-
-<body>
-
-<div id="gate">
-  <div id="box">
-
-    <img src="https://i.imgur.com/7tkRRcQ.jpeg">
-
-    <div class="by">
-      <b>Aplikasi by</b><br>
-      TikTok @gta5roleplaydihandphone
-    </div>
-
-    <div class="desc">
-      Ready Akun Steam <b>GTA 5 Original</b>, Akun Rockstar
-      <b>Berlicense</b> Atau Berlangganan Cloud Thinkmay<br>
-      Silakan Join Discord untuk info & order
-    </div>
-
-    <div class="links">
-      <a href="https://www.tiktok.com/@gta5roleplayandroid" target="_blank">
-        Follow TikTok
-      </a>
-      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
-        Join Discord
-      </a>
-    </div>
-
-    <!-- TOKEN (SIMETRIS) -->
-    <input id="t" placeholder="Token akses">
-    <button onclick="go()">MASUK</button>
-
-    <div id="msg"></div>
-
-    <div class="footer">
-      Popup akan tertutup dalam 5 detik<br>
-      Sumber halaman : www.thinkmay.net
-    </div>
-
-  </div>
-</div>
-
 <script>
-const TOKENS={
-  "ABC123":true,
-  "TRIAL999":true
-};
+const WORKER_URL = "https://tm-token.username.workers.dev";
 
-function go(){
-  let t=document.getElementById("t").value.trim();
-  if(TOKENS[t]){
+function getDeviceId(){
+  let id = localStorage.getItem("device_id");
+  if(!id){
+    id = crypto.randomUUID();
+    localStorage.setItem("device_id", id);
+  }
+  return id;
+}
+
+async function go(){
+  const token = document.getElementById("t").value.trim();
+  const msg = document.getElementById("msg");
+  msg.innerText = "⏳ Mengecek token...";
+
+  try{
+    const res = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({
+        token: token,
+        device: getDeviceId()
+      })
+    });
+
+    const data = await res.json();
+
+    if(!data.ok){
+      msg.innerText =
+        data.msg === "TOKEN_EXPIRED" ? "❌ Token expired" :
+        data.msg === "TOKEN_USED"    ? "❌ Token sudah dipakai device lain" :
+        "❌ Token salah";
+      return;
+    }
+
     document.getElementById("gate").remove();
-    document.body.innerHTML+=`<iframe src="https://thinkmay.net"></iframe>`;
-  }else{
-    document.getElementById("msg").innerText="❌ Token salah";
+    document.body.innerHTML += `<iframe src="https://thinkmay.net"></iframe>`;
+  }catch(e){
+    msg.innerText = "❌ Gagal koneksi server";
   }
 }
 </script>
-
-</body>
-</html>
