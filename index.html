@@ -1,3 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Thinkmay Access</title>
+  <script src="popup.js" defer></script>
+</head>
+<body style="background:#000;color:#00f0ff;font-family:sans-serif;text-align:center;">
+
+<h2>🔑 Masukkan Token</h2>
+
+<input id="tokenInput" placeholder="Token" style="padding:10px;border-radius:6px;border:none;">
+<br><br>
+<button onclick="cekToken()" style="padding:10px 18px;border-radius:8px;border:none;background:#00f0ff;color:#000;">
+Masuk
+</button>
+
+<div id="status" style="margin-top:15px;"></div>
+
 <script>
 async function cekToken() {
   const token = document.getElementById("tokenInput").value.trim();
@@ -9,7 +28,10 @@ async function cekToken() {
     document.getElementById("status").innerHTML = "✅ Akses diterima, reload...";
     setTimeout(() => location.reload(), 1000);
   } else {
-    document.getElementById("status").innerHTML = "❌ Token tidak valid";
+    document.getElementById("status").innerHTML = "❌ Token salah";
   }
 }
 </script>
+
+</body>
+</html>
