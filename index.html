@@ -2,60 +2,97 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Thinkmay Access</title>
+<title>Thinkmay Cloud Gate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#000;
+  font-family:Arial;
+  overflow:hidden;
+}
+#gate{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#000;
+  z-index:99999;
+}
+#box{
+  width:85%;
+  max-width:360px;
+  background:#0a0a0f;
+  border:2px solid #00f0ff;
+  border-radius:16px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 0 25px #00f0ff;
+  color:#00f0ff;
+}
+#box img{
+  width:80px;
+  border-radius:50%;
+  border:3px solid #ff00ff;
+  margin-bottom:10px;
+}
+input{
+  width:90%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin:8px 0;
+  text-align:center;
+}
+button{
+  width:95%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  background:linear-gradient(90deg,#00f0ff,#ff00ff);
+}
+#msg{margin-top:6px;color:#f55;font-size:13px;}
+iframe{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+}
+</style>
 </head>
-<body style="margin:0;background:#000;">
 
-<div id="gate" style="
-position:fixed;inset:0;
-background:rgba(0,0,0,.9);
-display:flex;align-items:center;justify-content:center;
-font-family:sans-serif;color:#00f0ff;z-index:99999;
-">
-  <div style="
-    background:#0a0a0f;border:2px solid #00f0ff;border-radius:16px;
-    padding:20px;width:85%;max-width:360px;text-align:center;
-    box-shadow:0 0 25px #00f0ff;
-  ">
-    <img src="https://i.imgur.com/7tkRRcQ.jpeg" style="width:90px;height:90px;border-radius:50%;border:3px solid #ff00ff;margin-bottom:12px;">
-    <div><b>Aplikasi by</b><br>TikTok @gta5roleplaydihandphone</div>
-    <p style="font-size:12px;color:#ccc;">
-      Ready Akun Steam GTA 5, Rockstar Berlicense<br>
-      Join Discord untuk info
-    </p>
+<body>
 
-    <input id="tokenInput" placeholder="Masukkan Token"
-      style="width:100%;padding:10px;border-radius:8px;border:none;margin-top:10px;">
-
-    <button onclick="cekToken()" style="
-      width:100%;margin-top:10px;padding:10px;border-radius:8px;
-      border:none;background:linear-gradient(90deg,#00f0ff,#ff00ff);
-      font-weight:bold;
-    ">MASUK</button>
-
-    <div id="status" style="margin-top:10px;font-size:12px;"></div>
-
-    <div style="margin-top:10px;">
-      <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">Follow TikTok</a><br>
-      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">Join Discord</a>
-    </div>
+<div id="gate">
+  <div id="box">
+    <img src="https://i.imgur.com/7tkRRcQ.jpeg">
+    <h3>Masukkan Token</h3>
+    <input id="t" placeholder="Token akses">
+    <button onclick="go()">MASUK</button>
+    <div id="msg"></div>
   </div>
 </div>
 
 <script>
-async function cekToken(){
-  const token = tokenInput.value.trim();
-  const res = await fetch("token.json?x="+Date.now());
-  const data = await res.json();
+const TOKENS={
+ "ABC123":true,
+ "TRIAL999":true
+};
 
-  if(data[token]){
-    document.getElementById("status").innerHTML="✅ Akses diterima...";
-    setTimeout(()=>{
-      location.href="https://www.thinkmay.net"; // tujuan cloud
-    },800);
-  }else{
-    document.getElementById("status").innerHTML="❌ Token salah";
-  }
+function go(){
+ let t=document.getElementById("t").value.trim();
+ if(TOKENS[t]){
+   document.getElementById("gate").remove();
+   document.body.innerHTML+=`
+   <iframe src="https://thinkmay.net"></iframe>
+   `;
+ }else{
+   document.getElementById("msg").innerText="❌ Token salah";
+ }
 }
 </script>
 
