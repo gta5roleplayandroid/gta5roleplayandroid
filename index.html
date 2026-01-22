@@ -55,6 +55,36 @@ button{
   background:linear-gradient(90deg,#00f0ff,#ff00ff);
 }
 #msg{margin-top:6px;color:#f55;font-size:13px;}
+
+.promo{font-size:13px;margin:6px 0;color:#ccc;}
+.promo.small{font-size:12px;color:#aaa;}
+
+.links{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:10px 0;
+}
+.links a{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:8px;
+  background:linear-gradient(90deg,#00f0ff,#ff00ff);
+  color:#000;
+  font-size:12px;
+  text-decoration:none;
+  font-weight:bold;
+}
+.links img{width:18px;height:18px;}
+
+.source{
+  margin-top:8px;
+  font-size:10px;
+  color:#666;
+}
+
 iframe{
   position:fixed;
   inset:0;
@@ -70,10 +100,34 @@ iframe{
 <div id="gate">
   <div id="box">
     <img src="https://i.imgur.com/7tkRRcQ.jpeg">
+
     <h3>Masukkan Token</h3>
+
+    <div class="promo">
+      <b>Aplikasi by</b><br>
+      TikTok @gta5roleplayandroid
+    </div>
+
+    <div class="promo small">
+      Ready <b>STEAM GTA5 ORI</b>, Akun Rockstar <b>Berlicense</b><br>
+      atau ingin <b>Berlangganan</b><br>
+      Silakan Join Discord
+    </div>
+
+    <div class="links">
+      <a href="https://www.tiktok.com/@gta5roleplayandroid" target="_blank">
+        <img src="https://i.imgur.com/3y8XK0P.png"> TikTok
+      </a>
+      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
+        <img src="https://i.imgur.com/1X5s8dO.png"> Discord
+      </a>
+    </div>
+
     <input id="t" placeholder="Token akses">
     <button onclick="go()">MASUK</button>
     <div id="msg"></div>
+
+    <div class="source">Sumber Halaman : www.thinkmay.net</div>
   </div>
 </div>
 
