@@ -9,9 +9,11 @@
 body{
   margin:0;
   background:#000;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   overflow:hidden;
 }
+
+/* overlay */
 #gate{
   position:fixed;
   inset:0;
@@ -21,59 +23,55 @@ body{
   background:#000;
   z-index:99999;
 }
+
+/* box utama */
 #box{
-  width:88%;
+  width:90%;
   max-width:360px;
-  height:78%;
-  max-height:480px;
   background:#0a0a0f;
   border:2px solid #00f0ff;
   border-radius:18px;
-  padding:20px;
+  padding:22px 18px;
   text-align:center;
   box-shadow:0 0 25px #00f0ff;
   color:#00f0ff;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
 }
+
+/* logo */
 #box img{
   width:90px;
   border-radius:50%;
   border:3px solid #ff00ff;
-  margin:10px auto 0;
+  margin:0 auto 10px;
 }
-input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  margin:4px 0;
-  text-align:center;
-}
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  font-weight:bold;
-  background:linear-gradient(90deg,#00f0ff,#ff00ff);
-}
-#msg{margin-top:6px;color:#f55;font-size:13px;}
 
-.promo{font-size:14px;margin:6px 0;color:#ccc;}
-.promo.small{font-size:13px;color:#aaa;}
+/* judul */
+h3{
+  margin:6px 0 10px;
+  font-size:20px;
+}
 
+/* teks promo */
+.promo{
+  font-size:14px;
+  color:#ccc;
+  margin-bottom:6px;
+}
+.promo.small{
+  font-size:13px;
+  color:#aaa;
+  line-height:1.4;
+}
+
+/* tombol link */
 .links{
   display:flex;
-  justify-content:center;
   gap:10px;
-  margin:2px 0;
-  /* Menambahkan margin-bottom yang lebih besar */
-  margin-bottom: 30px;
+  margin:12px 0 16px;
 }
 .links a{
-  padding:10px 14px;
+  flex:1;
+  padding:10px 0;
   border-radius:10px;
   background:linear-gradient(90deg,#00f0ff,#ff00ff);
   color:#000;
@@ -82,12 +80,44 @@ button{
   font-weight:bold;
 }
 
-.source{
-  font-size:11px;
-  color:#666;
-  margin-top:4px;
+/* input token */
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  margin-bottom:10px;
+  text-align:center;
+  font-size:14px;
 }
 
+/* tombol masuk */
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-weight:bold;
+  font-size:15px;
+  background:linear-gradient(90deg,#00f0ff,#ff00ff);
+  cursor:pointer;
+}
+
+/* pesan */
+#msg{
+  margin-top:8px;
+  font-size:13px;
+  color:#ff6666;
+}
+
+/* footer */
+.source{
+  margin-top:12px;
+  font-size:11px;
+  color:#666;
+}
+
+/* iframe */
 iframe{
   position:fixed;
   inset:0;
@@ -102,37 +132,37 @@ iframe{
 
 <div id="gate">
   <div id="box">
-    <div>
-      <img src="https://i.imgur.com/7tkRRcQ.jpeg">
-      <h3>Masukkan Token</h3>
 
-      <div class="promo">
-        <b>Aplikasi by</b><br>
-        TikTok @gta5roleplayandroid
-      </div>
+    <img src="https://i.imgur.com/7tkRRcQ.jpeg">
 
-      <div class="promo small">
-        Ready <b>STEAM GTA5 ORI</b>, Akun Rockstar <b>Berlicense</b><br>
-        atau ingin <b>Berlangganan</b><br>
-        Silakan Join Discord
-      </div>
+    <h3>Masukkan Token</h3>
 
-      <div class="links">
-        <a href="https://www.tiktok.com/@gta5roleplayandroid" target="_blank">
-          FOLLOW TIKTOK
-        </a>
-        <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
-          JOIN DISCORD
-        </a>
-      </div>
+    <div class="promo">
+      <b>Aplikasi by</b><br>
+      TikTok @gta5roleplayandroid
     </div>
 
-    <div>
-      <input id="t" placeholder="Token akses">
-      <button onclick="go()">MASUK</button>
-      <div id="msg"></div>
-      <div class="source">Sumber Halaman : www.thinkmay.net</div>
+    <div class="promo small">
+      Ready <b>STEAM GTA5 ORI</b>, Akun Rockstar <b>Berlicense</b><br>
+      atau ingin <b>Berlangganan</b><br>
+      Silakan Join Discord
     </div>
+
+    <div class="links">
+      <a href="https://www.tiktok.com/@gta5roleplayandroid" target="_blank">
+        FOLLOW TIKTOK
+      </a>
+      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
+        JOIN DISCORD
+      </a>
+    </div>
+
+    <input id="t" placeholder="Token akses">
+    <button onclick="go()">MASUK</button>
+
+    <div id="msg"></div>
+    <div class="source">Sumber Halaman : www.thinkmay.net</div>
+
   </div>
 </div>
 
@@ -143,129 +173,13 @@ const TOKENS={
 };
 
 function go(){
- let t=document.getElementById("t").value.trim();
- if(TOKENS[t]){
-   document.getElementById("gate").remove();
-   document.body.innerHTML+=`
-   <iframe src="https://thinkmay.net"></iframe>
-   `;
- }else{
-   document.getElementById("msg").innerText="❌ Token salah";
- }
-}
-</script>
-
-</body>
-</html><body>
-
-<div id="gate">
-  <div id="box">
-    <div>
-      <img src="https://i.imgur.com/7tkRRcQ.jpeg">
-      <h3>Masukkan Token</h3>
-
-      <div class="promo">
-        <b>Aplikasi by</b><br>
-        TikTok @gta5roleplayandroid
-      </div>
-
-      <div class="promo small">
-        Ready <b>STEAM GTA5 ORI</b>, Akun Rockstar <b>Berlicense</b><br>
-        atau ingin <b>Berlangganan</b><br>
-        Silakan Join Discord
-      </div>
-
-      <div class="links">
-        <a href="https://www.tiktok.com/@gta5roleplayandroid" target="_blank">
-          FOLLOW TIKTOK
-        </a>
-        <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
-          JOIN DISCORD
-        </a>
-      </div>
-    </div>
-
-    <div>
-      <input id="t" placeholder="Token akses">
-      <button onclick="go()">MASUK</button>
-      <div id="msg"></div>
-      <div class="source">Sumber Halaman : www.thinkmay.net</div>
-    </div>
-  </div>
-</div>
-
-<script>
-const TOKENS={
- "ABC123":true,
- "TRIAL999":true
-};
-
-function go(){
- let t=document.getElementById("t").value.trim();
- if(TOKENS[t]){
-   document.getElementById("gate").remove();
-   document.body.innerHTML+=`
-   <iframe src="https://thinkmay.net"></iframe>
-   `;
- }else{
-   document.getElementById("msg").innerText="❌ Token salah";
- }
-}
-</script>
-
-</body>
-</html><div id="gate">
-  <div id="box">
-    <div>
-      <img src="https://i.imgur.com/7tkRRcQ.jpeg">
-      <h3>Masukkan Token</h3>
-
-      <div class="promo">
-        <b>Aplikasi by</b><br>
-        TikTok @gta5roleplayandroid
-      </div>
-
-      <div class="promo small">
-        Ready <b>STEAM GTA5 ORI</b>, Akun Rockstar <b>Berlicense</b><br>
-        atau ingin <b>Berlangganan</b><br>
-        Silakan Join Discord
-      </div>
-
-      <div class="links">
-        <a href="https://www.tiktok.com/@gta5roleplayandroid" target="_blank">
-          FOLLOW TIKTOK
-        </a>
-        <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
-          JOIN DISCORD
-        </a>
-      </div>
-    </div>
-
-    <div>
-      <input id="t" placeholder="Token akses">
-      <button onclick="go()">MASUK</button>
-      <div id="msg"></div>
-      <div class="source">Sumber Halaman : www.thinkmay.net</div>
-    </div>
-  </div>
-</div>
-
-<script>
-const TOKENS={
- "ABC123":true,
- "TRIAL999":true
-};
-
-function go(){
- let t=document.getElementById("t").value.trim();
- if(TOKENS[t]){
-   document.getElementById("gate").remove();
-   document.body.innerHTML+=`
-   <iframe src="https://thinkmay.net"></iframe>
-   `;
- }else{
-   document.getElementById("msg").innerText="❌ Token salah";
- }
+  let t=document.getElementById("t").value.trim();
+  if(TOKENS[t]){
+    document.getElementById("gate").remove();
+    document.body.innerHTML+=`<iframe src="https://thinkmay.net"></iframe>`;
+  }else{
+    document.getElementById("msg").innerText="❌ Token salah";
+  }
 }
 </script>
 
