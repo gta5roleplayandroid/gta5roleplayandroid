@@ -1,34 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Thinkmay Access</title>
-  <script src="popup.js" defer></script>
+<meta charset="UTF-8">
+<title>Thinkmay Access</title>
 </head>
-<body style="background:#000;color:#00f0ff;font-family:sans-serif;text-align:center;">
+<body style="margin:0;background:#000;">
 
-<h2>🔑 Masukkan Token</h2>
+<div id="gate" style="
+position:fixed;inset:0;
+background:rgba(0,0,0,.9);
+display:flex;align-items:center;justify-content:center;
+font-family:sans-serif;color:#00f0ff;z-index:99999;
+">
+  <div style="
+    background:#0a0a0f;border:2px solid #00f0ff;border-radius:16px;
+    padding:20px;width:85%;max-width:360px;text-align:center;
+    box-shadow:0 0 25px #00f0ff;
+  ">
+    <img src="https://i.imgur.com/7tkRRcQ.jpeg" style="width:90px;height:90px;border-radius:50%;border:3px solid #ff00ff;margin-bottom:12px;">
+    <div><b>Aplikasi by</b><br>TikTok @gta5roleplaydihandphone</div>
+    <p style="font-size:12px;color:#ccc;">
+      Ready Akun Steam GTA 5, Rockstar Berlicense<br>
+      Join Discord untuk info
+    </p>
 
-<input id="tokenInput" placeholder="Token" style="padding:10px;border-radius:6px;border:none;">
-<br><br>
-<button onclick="cekToken()" style="padding:10px 18px;border-radius:8px;border:none;background:#00f0ff;color:#000;">
-Masuk
-</button>
+    <input id="tokenInput" placeholder="Masukkan Token"
+      style="width:100%;padding:10px;border-radius:8px;border:none;margin-top:10px;">
 
-<div id="status" style="margin-top:15px;"></div>
+    <button onclick="cekToken()" style="
+      width:100%;margin-top:10px;padding:10px;border-radius:8px;
+      border:none;background:linear-gradient(90deg,#00f0ff,#ff00ff);
+      font-weight:bold;
+    ">MASUK</button>
+
+    <div id="status" style="margin-top:10px;font-size:12px;"></div>
+
+    <div style="margin-top:10px;">
+      <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">Follow TikTok</a><br>
+      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">Join Discord</a>
+    </div>
+  </div>
+</div>
 
 <script>
-async function cekToken() {
-  const token = document.getElementById("tokenInput").value.trim();
-  const res = await fetch("token.json?x=" + Date.now());
+async function cekToken(){
+  const token = tokenInput.value.trim();
+  const res = await fetch("token.json?x="+Date.now());
   const data = await res.json();
 
-  if (data[token]) {
-    localStorage.setItem("tm_token", token);
-    document.getElementById("status").innerHTML = "✅ Akses diterima, reload...";
-    setTimeout(() => location.reload(), 1000);
-  } else {
-    document.getElementById("status").innerHTML = "❌ Token salah";
+  if(data[token]){
+    document.getElementById("status").innerHTML="✅ Akses diterima...";
+    setTimeout(()=>{
+      location.href="https://www.thinkmay.net"; // tujuan cloud
+    },800);
+  }else{
+    document.getElementById("status").innerHTML="❌ Token salah";
   }
 }
 </script>
