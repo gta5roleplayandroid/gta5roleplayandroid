@@ -1,37 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Login</title>
-<style>
-body{margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif}
-#box{background:#0a0a0f;border:2px solid #00f0ff;border-radius:16px;padding:20px;width:85%;max-width:320px;color:#00f0ff;text-align:center}
-input,button{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none}
-button{background:linear-gradient(90deg,#00f0ff,#ff00ff);font-weight:bold}
-</style>
-</head>
-<body>
-
-<div id="box">
-<h3>Masukkan Token</h3>
-<input id="t" placeholder="Token">
-<button onclick="go()">MASUK</button>
-<div id="m"></div>
-</div>
-
-<script>
-async function go(){
- const r=await fetch("token.json?x="+Date.now());
- const d=await r.json();
- const t=document.getElementById("t").value.trim();
- if(d[t]){
-   location.href="https://thinkmay.net";
- }else{
-   document.getElementById("m").innerText="Token salah";
- }
-}
-</script>
-
-</body>
-</html>
-
+document.body.innerHTML = `
+<iframe src="https://thinkmay.net"
+style="position:fixed;inset:0;width:100%;height:100%;border:0;"></iframe>
+`;
