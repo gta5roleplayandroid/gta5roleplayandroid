@@ -24,12 +24,12 @@ body{
 
 /* === ANIMATION === */
 @keyframes popupIn{
-  from{opacity:0;transform:scale(.85) translateY(30px)}
+  from{opacity:0;transform:scale(.9) translateY(25px)}
   to{opacity:1;transform:scale(1) translateY(0)}
 }
 @keyframes popupOut{
   from{opacity:1;transform:scale(1)}
-  to{opacity:0;transform:scale(.85)}
+  to{opacity:0;transform:scale(.9)}
 }
 @keyframes shake{
   0%,100%{transform:translateX(0)}
@@ -47,12 +47,8 @@ body{
   background-size:400% 400%;
   animation:rgb 6s linear infinite, popupIn .45s ease;
 }
-.box.closing{
-  animation:popupOut .35s ease forwards;
-}
-.box.error{
-  animation:shake .35s;
-}
+.box.closing{animation:popupOut .35s ease forwards}
+.box.error{animation:shake .35s}
 
 @keyframes rgb{
   0%{background-position:0% 50%}
@@ -63,20 +59,15 @@ body{
 .inner{
   background:#0b0e17;
   border-radius:20px;
-  padding:20px 18px;
+  padding:18px 18px 16px;
   text-align:center;
 }
 
-/* === TEXT === */
-.appby{
-  font-size:13px;
-  color:#00ffff;
-  margin-bottom:12px;
-}
+/* === LOGO === */
 .logo-wrap{
-  width:90px;
-  height:90px;
-  margin:0 auto 14px;
+  width:88px;
+  height:88px;
+  margin:0 auto 6px;
   border-radius:50%;
   padding:3px;
   background:linear-gradient(270deg,#00ffff,#ff00ff,#00ff88,#00ffff);
@@ -94,10 +85,20 @@ body{
   height:100%;
   object-fit:cover;
 }
+
+/* === APP BY (PINDAH KE BAWAH LOGO) === */
+.appby{
+  font-size:12.5px;
+  color:#00ffff;
+  margin-bottom:10px;
+  line-height:1.4;
+}
+
+/* === DESC === */
 .desc{
   font-size:13px;
-  line-height:1.6;
-  margin-bottom:14px;
+  line-height:1.55;
+  margin-bottom:12px;
   color:#ddd;
 }
 .desc b{font-weight:800;color:#fff}
@@ -105,8 +106,8 @@ body{
 /* === FORM === */
 input{
   width:100%;
-  padding:14px;
-  margin-top:10px;
+  padding:13px;
+  margin-top:6px;
   border-radius:14px;
   border:none;
   background:#12162a;
@@ -115,8 +116,8 @@ input{
 }
 button{
   width:100%;
-  padding:14px;
-  margin-top:12px;
+  padding:13px;
+  margin-top:10px;
   border:none;
   border-radius:14px;
   background:linear-gradient(90deg,#00ffff,#ff00ff);
@@ -124,21 +125,21 @@ button{
   color:#000;
 }
 #msg{
-  min-height:18px;
-  margin-top:8px;
-  font-size:13px;
+  min-height:16px;
+  margin-top:6px;
+  font-size:12.5px;
   color:#ff6b6b;
 }
 
-/* === SOCIAL === */
+/* === SOCIAL (DIPADETIN) === */
 .social{
   display:flex;
-  gap:10px;
-  margin-top:14px;
+  gap:8px;
+  margin-top:10px;
 }
 .social a{
   flex:1;
-  padding:12px 0;
+  padding:11px 0;
   background:linear-gradient(90deg,#00ffff,#ff00ff);
   border-radius:14px;
   font-size:13px;
@@ -149,7 +150,7 @@ button{
 
 /* === FOOTER === */
 .footer{
-  margin-top:12px;
+  margin-top:10px;
   font-size:11px;
   color:#aaa;
 }
@@ -170,15 +171,15 @@ iframe{
   <div class="box" id="popupBox">
     <div class="inner">
 
-      <div class="appby">
-        Aplikasi by<br>
-        TikTok <b>@gta5roleplaydihandphone</b>
-      </div>
-
       <div class="logo-wrap">
         <div class="logo">
           <img src="https://i.imgur.com/7tkRRcQ.jpeg">
         </div>
+      </div>
+
+      <div class="appby">
+        Aplikasi by<br>
+        TikTok <b>@gta5roleplaydihandphone</b>
       </div>
 
       <div class="desc">
@@ -228,7 +229,6 @@ function validate(token){
         res.msg==="EXPIRED"?"⏰ Token habis":
         res.msg==="USED_ON_OTHER_DEVICE"?"🚫 Token dipakai device lain":
         "❌ Token salah";
-
       popupBox.classList.add("error");
       setTimeout(()=>popupBox.classList.remove("error"),350);
       return;
