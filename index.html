@@ -2,25 +2,16 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thinkmay Gate</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta http-equiv="Content-Security-Policy"
-content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
-
 <style>
-*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-
 body{
   margin:0;
+  font-family:Arial,Helvetica,sans-serif;
   background:#000;
 }
 
-body.lock{
-  overflow:hidden;
-}
-
-/* OVERLAY */
 #gate{
   position:fixed;
   inset:0;
@@ -28,210 +19,155 @@ body.lock{
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:99999;
+  z-index:9999;
 }
 
-/* BOX */
 #box{
-  width:340px;
-  background:#05070c;
-  border-radius:20px;
-  padding:22px;
+  width:320px;
+  background:#0b0b10;
+  border-radius:18px;
+  padding:20px;
   text-align:center;
-  color:#eaffff;
+  color:#cfffff;
   box-shadow:0 0 30px #00f0ff;
 }
 
-/* LOGO */
 #box img{
-  width:80px;
-  height:80px;
+  width:78px;
+  height:78px;
   border-radius:50%;
-  object-fit:cover;
-  margin-bottom:10px;
+  border:3px solid #ff00ff;
+  margin-bottom:8px;
 }
 
-/* TEXT */
-#box h3{margin:6px 0;font-size:17px}
-#box p{font-size:13px;opacity:.85;line-height:1.4}
-
-/* BUTTON */
-.btn{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:14px;
-  font-size:14px;
-  font-weight:bold;
-}
-
-.tiktok{background:#00f2ea}
-.discord{background:#5865F2;color:#fff}
-.login{background:#00f0ff}
-
-/* INPUT */
-#token{
-  width:100%;
-  padding:12px;
-  margin-top:14px;
-  border:none;
-  border-radius:12px;
-  text-align:center;
-  font-size:14px;
-  outline:none;
-}
-
-/* STATUS */
-#status{
-  margin-top:10px;
+.desc{
   font-size:13px;
-  min-height:18px;
+  color:#ccc;
+  margin-bottom:12px;
 }
-.ok{color:#2cff8f}
-.err{color:#ff6b6b}
 
-/* APP */
-#app{
+.links a{
+  display:block;
+  padding:11px;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:linear-gradient(90deg,#00f0ff,#ff00ff);
+  color:#000;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+input{
   width:100%;
-  height:100vh;
+  padding:12px;
+  border-radius:12px;
   border:none;
-  display:none;
+  text-align:center;
+  margin-top:10px;
+  font-size:14px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:12px;
+  border:none;
+  font-weight:bold;
+  background:linear-gradient(90deg,#00f0ff,#ff00ff);
+}
+
+#msg{
+  margin-top:8px;
+  font-size:12px;
+  color:#ff6b6b;
+}
+
+iframe{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
 }
 </style>
 </head>
 
-<body class="lock">
+<body>
 
-<!-- GATE -->
 <div id="gate">
   <div id="box">
     <img src="https://i.imgur.com/7tkRRcQ.jpeg">
+    <div class="desc">
+      Akses Thinkmay membutuhkan token aktif
+    </div>
 
-    <h3>Aplikasi by</h3>
-    <p>
-      TikTok @gta5roleplaydihandphone<br>
-      Cloud Thinkmay Berlicense
-    </p>
+    <div class="links">
+      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">Join Discord</a>
+    </div>
 
-    <button class="btn tiktok" id="tiktokBtn">Follow TikTok</button>
-    <button class="btn discord" id="discordBtn">Join Discord</button>
-
-    <input id="token" placeholder="MASUKKAN TOKEN AKSES">
-    <button class="btn login" id="loginBtn">MASUK</button>
-
-    <div id="status"></div>
+    <input id="token" placeholder="Masukkan Token">
+    <button onclick="login()">MASUK</button>
+    <div id="msg"></div>
   </div>
 </div>
 
-<!-- THINKMAY -->
-<iframe id="app" src="https://thinkmay.net"></iframe>
-
 <script>
 const API = "https://tokengta5.lmore000013.workers.dev";
+let timer = null;
 
-const gate = document.getElementById("gate");
-const app  = document.getElementById("app");
-const status = document.getElementById("status");
-const tokenInput = document.getElementById("token");
+// auto check token di localStorage
+const saved = localStorage.getItem("thinkmay_token");
+if(saved){
+  validate(saved);
+}
 
-/* ==== BUKA LINK ==== */
-document.getElementById("tiktokBtn").onclick=()=>{
-  window.open("https://www.tiktok.com/@gta5roleplayandroid","_blank");
-};
-document.getElementById("discordBtn").onclick=()=>{
-  window.open("https://discord.gg/JE9Y7W2Vuw","_blank");
-};
+function login(){
+  const t = document.getElementById("token").value.trim();
+  if(!t) return;
+  validate(t);
+}
 
-/* ==== LOCK / UNLOCK ==== */
+function validate(token){
+  fetch(API,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ token })
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(!res.ok){
+      localStorage.removeItem("thinkmay_token");
+      document.getElementById("msg").innerText =
+        res.msg==="EXPIRED" ? "⏰ Token sudah habis" :
+        res.msg==="USED_ON_OTHER_DEVICE" ? "🚫 Token dipakai device lain" :
+        "❌ Token salah";
+      return;
+    }
+
+    // sukses
+    localStorage.setItem("thinkmay_token", token);
+    openApp(res.exp);
+  })
+  .catch(()=>{
+    document.getElementById("msg").innerText="⚠ Server error";
+  });
+}
+
+function openApp(exp){
+  document.getElementById("gate").remove();
+  document.body.innerHTML += `<iframe src="https://thinkmay.net"></iframe>`;
+
+  const sisa = exp - Date.now();
+  if(sisa > 0){
+    timer = setTimeout(lock, sisa);
+  }
+}
+
 function lock(){
-  document.body.classList.add("lock");
-  gate.style.display="flex";
-  app.style.display="none";
+  localStorage.removeItem("thinkmay_token");
+  location.reload();
 }
-function unlock(){
-  document.body.classList.remove("lock");
-  gate.style.display="none";
-  app.style.display="block";
-}
-
-/* ==== LOGIN ==== */
-async function login(){
-  const t = tokenInput.value.trim();
-  status.className="";
-  status.textContent="";
-
-  if(!t){
-    status.textContent="⚠️ Token belum diisi";
-    status.className="err";
-    return;
-  }
-
-  status.textContent="⏳ Verifikasi token...";
-
-  try{
-    const r = await fetch(API,{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ token:t })
-    });
-    const j = await r.json();
-
-    if(j.ok){
-      status.textContent="✅ Token diterima";
-      status.className="ok";
-      localStorage.setItem("session",JSON.stringify(j));
-      setTimeout(()=>{
-        unlock();
-        monitor();
-      },600);
-    }else{
-      status.textContent="❌ Token salah / expired";
-      status.className="err";
-    }
-  }catch(e){
-    status.textContent="❌ Server error";
-    status.className="err";
-  }
-}
-
-/* ==== EVENT HP SAFE ==== */
-["click","touchstart"].forEach(ev=>{
-  document.getElementById("loginBtn")
-    .addEventListener(ev,e=>{
-      e.preventDefault();
-      login();
-    });
-});
-
-/* ==== MONITOR EXPIRE ==== */
-function monitor(){
-  const s = JSON.parse(localStorage.getItem("session")||"null");
-  if(!s) return lock();
-
-  const timer = setInterval(()=>{
-    if(Date.now() > s.exp){
-      clearInterval(timer);
-      localStorage.removeItem("session");
-      alert("⏰ WAKTU AKSES HABIS");
-      lock();
-    }
-  },3000);
-}
-
-/* ==== AUTO CHECK ==== */
-(function(){
-  if(navigator.userAgent.includes("wv")){
-    alert("⚠️ Harap buka link ini di Google Chrome");
-  }
-  const s = JSON.parse(localStorage.getItem("session")||"null");
-  if(s && Date.now()<s.exp){
-    unlock();
-    monitor();
-  }else{
-    lock();
-  }
-})();
 </script>
 
 </body>
