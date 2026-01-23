@@ -3,170 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <title>Thinkmay Cloud Gate</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-body{
-  margin:0;
-  background:#000;
-  font-family:Arial,sans-serif;
+body.locked{
+  overflow:hidden;
+  pointer-events:none;
 }
-#gate,#lock{
+
+#gate{
   position:fixed;
   inset:0;
+  background:rgba(0,0,0,.85);
   display:flex;
   justify-content:center;
   align-items:center;
-  background:rgba(0,0,0,.95);
   z-index:9999;
 }
-#box{
-  width:320px;
-  background:#0b0b10;
-  border-radius:18px;
+
+#popup{
+  width:360px;
+  background:#05070c;
+  border-radius:22px;
   padding:22px;
   text-align:center;
-  color:#bffcff;
-  box-shadow:0 0 25px #00f0ff;
+  color:#cfffff;
+  box-shadow:0 0 35px #00f0ff;
+  pointer-events:auto;
 }
-input,button{
+
+#popup img{
+  width:80px;
+  border-radius:50%;
+  margin-bottom:10px;
+}
+
+#popup h3{
+  margin:6px 0;
+  font-size:18px;
+}
+
+#popup p{
+  font-size:13px;
+  opacity:.85;
+}
+
+.btn{
+  display:block;
   width:100%;
   padding:12px;
   margin-top:10px;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.tiktok{background:linear-gradient(90deg,#00f2ea,#ff0050);color:#000;}
+.discord{background:#5865F2;color:#fff;}
+
+input{
+  width:100%;
+  padding:11px;
+  margin-top:12px;
   border-radius:10px;
   border:none;
+  text-align:center;
   font-size:14px;
 }
-button{
-  background:linear-gradient(90deg,#00f0ff,#ff00ff);
-  font-weight:bold;
-}
-#msg{
+
+#status{
   margin-top:8px;
   font-size:13px;
   color:#ff6b6b;
 }
-iframe{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  border:0;
-  z-index:1;
-}
-#lock{display:none;}
 </style>
 </head>
 
-<body>
+<body class="locked">
 
-<!-- GATE -->
+<!-- POPUP TOKEN -->
 <div id="gate">
-  <div id="box">
-    <h3>MASUK THINKMAY</h3>
-    <input id="t" placeholder="Token akses">
-    <button onclick="login()">MASUK</button>
-    <div id="msg"></div>
+  <div id="popup">
+    <img src="https://i.imgur.com/Z8mF7Z6.png">
+    <h3>Aplikasi by</h3>
+    <p>TikTok @gta5roleplaydihandphone</p>
+    <p>Ready Akun Steam GTA 5 Original / Rockstar<br>
+       Berlicense atau Berlangganan Cloud Thinkmay</p>
+
+    <button class="btn tiktok" onclick="window.open('https://tiktok.com','_blank')">Follow TikTok</button>
+    <button class="btn discord" onclick="window.open('https://discord.gg','_blank')">Join Discord</button>
+
+    <!-- INPUT TOKEN -->
+    <input id="token" placeholder="MASUKKAN TOKEN AKSES">
+    <button class="btn" onclick="login()">MASUK</button>
+    <div id="status"></div>
   </div>
 </div>
 
-<!-- LOCK SCREEN -->
-<div id="lock">
-  <div id="box" style="box-shadow:0 0 25px #ff0055;">
-    <h3 style="color:#ff5b5b;">⏰ WAKTU HABIS</h3>
-    <p style="font-size:14px;color:#fff;">
-      Masa aktif token kamu sudah berakhir.<br>
-      Silakan masukkan token baru.
-    </p>
-    <button onclick="location.reload()">MASUKKAN TOKEN</button>
-  </div>
-</div>
+<!-- ISI WEBSITE THINKMAY -->
+<iframe id="app" src="https://thinkmay.net"
+ style="width:100%;height:100vh;border:none;display:none"></iframe>
 
 <script>
 const API = "https://tokengta5.lmore000013.workers.dev";
 
-/* DEVICE ID */
-function getDevice(){
-  let d = localStorage.getItem("DEVICE_ID");
-  if(!d){
-    d = "dev-" + Math.random().toString(36).slice(2);
-    localStorage.setItem("DEVICE_ID", d);
-  }
-  return d;
+function lock(){
+  document.body.classList.add("locked");
+  document.getElementById("gate").style.display="flex";
+  document.getElementById("app").style.display="none";
 }
 
-/* TAMPILKAN THINKMAY */
-function showThinkmay(){
+function unlock(){
+  document.body.classList.remove("locked");
   document.getElementById("gate").style.display="none";
-  document.getElementById("lock").style.display="none";
-  if(!document.querySelector("iframe")){
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      `<iframe src="https://thinkmay.net"></iframe>`
-    );
+  document.getElementById("app").style.display="block";
+}
+
+async function login(){
+  const t = token.value.trim();
+  if(!t) return;
+
+  status.innerText="Verifikasi token...";
+
+  try{
+    const r = await fetch(API,{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ token:t })
+    });
+    const j = await r.json();
+
+    if(j.ok){
+      localStorage.setItem("session",JSON.stringify(j));
+      unlock();
+      monitor();
+    }else{
+      status.innerText="TOKEN SALAH / EXPIRED";
+    }
+  }catch{
+    status.innerText="SERVER ERROR";
   }
 }
 
-/* KUNCI LAYAR */
-function lockScreen(){
-  document.querySelector("iframe")?.remove();
-  localStorage.removeItem("TOKEN_OK");
-  document.getElementById("gate").style.display="none";
-  document.getElementById("lock").style.display="flex";
-}
+function monitor(){
+  const s = JSON.parse(localStorage.getItem("session")||"null");
+  if(!s) return lock();
 
-/* LOGIN TOKEN */
-function login(){
-  const token = document.getElementById("t").value.trim();
-  fetch(API+"/check",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      token: token,
-      device: getDevice()
-    })
-  })
-  .then(r=>r.json())
-  .then(j=>{
-    if(j.ok){
-      localStorage.setItem("TOKEN_OK", token);
-      showThinkmay();
-    }else{
-      document.getElementById("msg").innerText =
-        "❌ " + (j.error || "Token salah");
+  const check = setInterval(()=>{
+    if(Date.now()>s.exp){
+      clearInterval(check);
+      localStorage.removeItem("session");
+      alert("⏰ WAKTU HABIS");
+      lock();
     }
-  })
-  .catch(()=>{
-    document.getElementById("msg").innerText="❌ SERVER ERROR";
-  });
+  },3000);
 }
 
-/* AUTO LOGIN + AUTO EXPIRE CHECK */
-function autoLogin(){
-  const token = localStorage.getItem("TOKEN_OK");
-  if(!token) return;
-
-  fetch(API+"/check",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      token: token,
-      device: getDevice()
-    })
-  })
-  .then(r=>r.json())
-  .then(j=>{
-    if(j.ok){
-      showThinkmay();
-    }else{
-      lockScreen();
-    }
-  })
-  .catch(()=>{
-    lockScreen();
-  });
-}
-
-autoLogin();
+(function(){
+  const s = JSON.parse(localStorage.getItem("session")||"null");
+  if(s && Date.now()<s.exp){
+    unlock();
+    monitor();
+  }else{
+    lock();
+  }
+})();
 </script>
 
 </body>
