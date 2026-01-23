@@ -1,3 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Token Gate Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  font-family:Arial, sans-serif;
+  background:#111;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.box{
+  background:#1b1b1b;
+  padding:20px;
+  border-radius:12px;
+  width:280px;
+  text-align:center;
+}
+input,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+}
+button{
+  background:#00f0ff;
+  font-weight:bold;
+}
+#msg{
+  margin-top:10px;
+  font-size:13px;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h3>Masukkan Token</h3>
+  <input id="t" placeholder="Token akses">
+  <button onclick="go()">MASUK</button>
+  <div id="msg"></div>
+</div>
+
 <script>
 function getDeviceId(){
   let id = localStorage.getItem("device_id");
@@ -41,14 +90,17 @@ async function go(){
       `;
     }else{
       const map = {
-        TOKEN_EXPIRED: "⏱ Token sudah kadaluarsa",
-        TOKEN_USED_DEVICE: "📱 Token sudah dipakai di device lain",
-        TOKEN_INVALID: "❌ Token tidak valid"
+        TOKEN_EXPIRED: "⏱ Token kadaluarsa",
+        TOKEN_USED_DEVICE: "📱 Token sudah dipakai device lain",
+        TOKEN_INVALID: "❌ Token salah"
       };
-      msg.innerText = map[data.msg] || "❌ Token ditolak";
+      msg.innerText = map[data.msg] || "❌ Ditolak";
     }
   }catch(e){
-    msg.innerText="❌ Server token error";
+    msg.innerText="❌ Server error";
   }
 }
 </script>
+
+</body>
+</html>
