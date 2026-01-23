@@ -2,111 +2,82 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thinkmay Gate</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ThinkMay Access</title>
 
 <style>
+*{box-sizing:border-box;font-family:Arial}
 body{
   margin:0;
-  font-family:Arial,Helvetica,sans-serif;
   background:#000;
+  color:#fff;
+  height:100vh;
 }
-
 #gate{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.88);
   display:flex;
   align-items:center;
   justify-content:center;
+  background:#000;
   z-index:9999;
 }
-
-#box{
-  width:320px;
-  background:#0b0b10;
-  border-radius:18px;
+.box{
+  width:90%;
+  max-width:380px;
+  background:#111;
   padding:20px;
+  border-radius:14px;
   text-align:center;
-  color:#cfffff;
-  box-shadow:0 0 30px #00f0ff;
+  box-shadow:0 0 25px #00ffff55;
 }
-
-#box img{
-  width:78px;
-  height:78px;
+.box img{
+  width:90px;
   border-radius:50%;
-  border:3px solid #ff00ff;
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
-
-.desc{
-  font-size:13px;
-  color:#ccc;
-  margin-bottom:12px;
-}
-
-.links a{
-  display:block;
-  padding:11px;
-  margin-bottom:8px;
-  border-radius:12px;
-  background:linear-gradient(90deg,#00f0ff,#ff00ff);
-  color:#000;
-  font-weight:bold;
-  text-decoration:none;
-}
-
 input{
   width:100%;
   padding:12px;
-  border-radius:12px;
+  margin-top:12px;
+  border-radius:10px;
   border:none;
+  outline:none;
   text-align:center;
-  margin-top:10px;
-  font-size:14px;
 }
-
 button{
   width:100%;
   padding:12px;
-  margin-top:8px;
-  border-radius:12px;
+  margin-top:12px;
   border:none;
+  border-radius:10px;
+  background:#00ffff;
   font-weight:bold;
-  background:linear-gradient(90deg,#00f0ff,#ff00ff);
 }
-
 #msg{
-  margin-top:8px;
-  font-size:12px;
-  color:#ff6b6b;
+  margin-top:10px;
+  min-height:18px;
+  color:#ff5555;
 }
-
 iframe{
   position:fixed;
   inset:0;
   width:100%;
   height:100%;
-  border:0;
+  border:none;
 }
+a{color:#0ff;text-decoration:none}
 </style>
 </head>
 
 <body>
 
 <div id="gate">
-  <div id="box">
-    <img src="https://i.imgur.com/7tkRRcQ.jpeg">
-    <div class="desc">
-      Akses Thinkmay membutuhkan token aktif
-    </div>
-
-    <div class="links">
-      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">Join Discord</a>
-    </div>
-
-    <input id="token" placeholder="Masukkan Token">
+  <div class="box">
+    <img src="logo.png">
+    <h3>AKSES THINKMAY</h3>
+    <a href="https://discord.gg/" target="_blank">Join Discord</a>
+    <input id="token" placeholder="MASUKKAN TOKEN">
     <button onclick="login()">MASUK</button>
     <div id="msg"></div>
   </div>
@@ -116,11 +87,9 @@ iframe{
 const API = "https://tokengta5.lmore000013.workers.dev";
 let timer = null;
 
-// auto check token di localStorage
+// auto login
 const saved = localStorage.getItem("thinkmay_token");
-if(saved){
-  validate(saved);
-}
+if(saved) validate(saved);
 
 function login(){
   const t = document.getElementById("token").value.trim();
@@ -138,36 +107,63 @@ function validate(token){
   .then(res=>{
     if(!res.ok){
       localStorage.removeItem("thinkmay_token");
-      document.getElementById("msg").innerText =
-        res.msg==="EXPIRED" ? "⏰ Token sudah habis" :
-        res.msg==="USED_ON_OTHER_DEVICE" ? "🚫 Token dipakai device lain" :
-        "❌ Token salah";
+      showMsg(
+        res.msg==="EXPIRED" ? "⏰ Waktu akses habis" :
+        res.msg==="USED_ON_OTHER_DEVICE" ? "🚫 Dipakai device lain" :
+        "❌ Token salah"
+      );
       return;
     }
-
-    // sukses
     localStorage.setItem("thinkmay_token", token);
     openApp(res.exp);
   })
-  .catch(()=>{
-    document.getElementById("msg").innerText="⚠ Server error";
-  });
+  .catch(()=>showMsg("⚠ SERVER ERROR"));
 }
 
 function openApp(exp){
-  document.getElementById("gate").remove();
-  document.body.innerHTML += `<iframe src="https://thinkmay.net"></iframe>`;
-
+  document.getElementById("gate").style.display="none";
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `<iframe src="https://thinkmay.net"></iframe>`
+  );
   const sisa = exp - Date.now();
   if(sisa > 0){
-    timer = setTimeout(lock, sisa);
+    timer = setTimeout(lockScreen, sisa);
   }
 }
 
-function lock(){
+function lockScreen(){
   localStorage.removeItem("thinkmay_token");
-  location.reload();
+  document.getElementById("gate").style.display="flex";
+  document.getElementById("msg").innerText = "⏰ WAKTU AKSES TELAH HABIS";
 }
+
+function showMsg(t){
+  document.getElementById("msg").innerText = t;
+}
+
+/* =====================
+   ANTI INSPECT (BASIC)
+===================== */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("keydown",e=>{
+  if(
+    e.key==="F12" ||
+    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+    (e.ctrlKey && e.key==="U")
+  ){
+    e.preventDefault();
+  }
+});
+let devOpen=false;
+setInterval(()=>{
+  const t=performance.now();
+  debugger;
+  if(performance.now()-t>100 && !devOpen){
+    devOpen=true;
+    document.body.innerHTML="<h1 style='color:red;text-align:center;margin-top:40vh'>ACCESS BLOCKED</h1>";
+  }
+},1000);
 </script>
 
 </body>
