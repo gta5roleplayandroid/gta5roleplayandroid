@@ -2,41 +2,52 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Thinkmay Cloud Gate</title>
+<title>Thinkmay Access Gate</title>
 
 <style>
-body.locked{
-  overflow:hidden;
-  pointer-events:none;
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+
+body{
+  margin:0;
+  background:#000;
 }
 
+body.locked{
+  overflow:hidden;
+}
+
+/* ===== OVERLAY ===== */
 #gate{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.85);
   display:flex;
-  justify-content:center;
   align-items:center;
-  z-index:9999;
+  justify-content:center;
+  z-index:99999;
 }
 
+/* ===== POPUP ===== */
 #popup{
   width:360px;
   background:#05070c;
   border-radius:22px;
-  padding:22px;
+  padding:24px;
   text-align:center;
-  color:#cfffff;
+  color:#e8ffff;
   box-shadow:0 0 35px #00f0ff;
-  pointer-events:auto;
 }
 
+/* LOGO */
 #popup img{
-  width:80px;
+  width:90px;
+  height:90px;
   border-radius:50%;
-  margin-bottom:10px;
+  object-fit:cover;
+  margin-bottom:12px;
 }
 
+/* TEXT */
 #popup h3{
   margin:6px 0;
   font-size:18px;
@@ -45,86 +56,131 @@ body.locked{
 #popup p{
   font-size:13px;
   opacity:.85;
+  line-height:1.4;
 }
 
+/* BUTTON */
 .btn{
-  display:block;
   width:100%;
   padding:12px;
   margin-top:10px;
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   font-size:15px;
   font-weight:bold;
   cursor:pointer;
 }
 
-.tiktok{background:linear-gradient(90deg,#00f2ea,#ff0050);color:#000;}
-.discord{background:#5865F2;color:#fff;}
+.tiktok{
+  background:linear-gradient(90deg,#00f2ea,#ff0050);
+  color:#000;
+}
 
-input{
+.discord{
+  background:#5865F2;
+  color:#fff;
+}
+
+.login{
+  background:#00f0ff;
+  color:#000;
+}
+
+/* INPUT */
+#token{
   width:100%;
-  padding:11px;
-  margin-top:12px;
-  border-radius:10px;
+  padding:12px;
+  margin-top:14px;
+  border-radius:12px;
   border:none;
+  outline:none;
   text-align:center;
   font-size:14px;
 }
 
+/* STATUS */
 #status{
-  margin-top:8px;
+  margin-top:10px;
   font-size:13px;
-  color:#ff6b6b;
+  min-height:18px;
+}
+
+.ok{color:#2cff8f}
+.err{color:#ff6b6b}
+
+/* IFRAME */
+#app{
+  width:100%;
+  height:100vh;
+  border:none;
+  display:none;
 }
 </style>
 </head>
 
 <body class="locked">
 
-<!-- POPUP TOKEN -->
+<!-- ===== POPUP TOKEN ===== -->
 <div id="gate">
   <div id="popup">
-    <img src="https://i.imgur.com/Z8mF7Z6.png">
+    <!-- GANTI LOGO DI SINI -->
+    <img src="https://i.imgur.com/Z8mF7Z6.png" alt="logo">
+
     <h3>Aplikasi by</h3>
-    <p>TikTok @gta5roleplaydihandphone</p>
-    <p>Ready Akun Steam GTA 5 Original / Rockstar<br>
-       Berlicense atau Berlangganan Cloud Thinkmay</p>
+    <p>
+      TikTok @gta5roleplaydihandphone<br>
+      Ready Akun Steam GTA 5 Original / Rockstar<br>
+      Berlicense atau Berlangganan Cloud Thinkmay
+    </p>
 
-    <button class="btn tiktok" onclick="window.open('https://tiktok.com','_blank')">Follow TikTok</button>
-    <button class="btn discord" onclick="window.open('https://discord.gg','_blank')">Join Discord</button>
+    <button class="btn tiktok"
+      onclick="window.open('https://tiktok.com','_blank')">
+      Follow TikTok
+    </button>
 
-    <!-- INPUT TOKEN -->
+    <button class="btn discord"
+      onclick="window.open('https://discord.gg','_blank')">
+      Join Discord
+    </button>
+
+    <!-- TOKEN -->
     <input id="token" placeholder="MASUKKAN TOKEN AKSES">
-    <button class="btn" onclick="login()">MASUK</button>
+    <button class="btn login" onclick="login()">MASUK</button>
+
     <div id="status"></div>
   </div>
 </div>
 
-<!-- ISI WEBSITE THINKMAY -->
-<iframe id="app" src="https://thinkmay.net"
- style="width:100%;height:100vh;border:none;display:none"></iframe>
+<!-- ===== THINKMAY ===== -->
+<iframe id="app" src="https://thinkmay.net"></iframe>
 
 <script>
 const API = "https://tokengta5.lmore000013.workers.dev";
 
 function lock(){
   document.body.classList.add("locked");
-  document.getElementById("gate").style.display="flex";
-  document.getElementById("app").style.display="none";
+  gate.style.display="flex";
+  app.style.display="none";
 }
 
 function unlock(){
   document.body.classList.remove("locked");
-  document.getElementById("gate").style.display="none";
-  document.getElementById("app").style.display="block";
+  gate.style.display="none";
+  app.style.display="block";
 }
 
 async function login(){
   const t = token.value.trim();
-  if(!t) return;
+  status.textContent="";
+  status.className="";
 
-  status.innerText="Verifikasi token...";
+  if(!t){
+    status.textContent="⚠️ Token belum diisi";
+    status.className="err";
+    return;
+  }
+
+  status.textContent="⏳ Verifikasi token...";
 
   try{
     const r = await fetch(API,{
@@ -132,17 +188,24 @@ async function login(){
       headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({ token:t })
     });
+
     const j = await r.json();
 
     if(j.ok){
+      status.textContent="✅ Token diterima";
+      status.className="ok";
       localStorage.setItem("session",JSON.stringify(j));
-      unlock();
-      monitor();
+      setTimeout(()=>{
+        unlock();
+        monitor();
+      },600);
     }else{
-      status.innerText="TOKEN SALAH / EXPIRED";
+      status.textContent="❌ Token salah / expired";
+      status.className="err";
     }
   }catch{
-    status.innerText="SERVER ERROR";
+    status.textContent="❌ Server error";
+    status.className="err";
   }
 }
 
@@ -150,19 +213,20 @@ function monitor(){
   const s = JSON.parse(localStorage.getItem("session")||"null");
   if(!s) return lock();
 
-  const check = setInterval(()=>{
-    if(Date.now()>s.exp){
-      clearInterval(check);
+  const timer = setInterval(()=>{
+    if(Date.now() > s.exp){
+      clearInterval(timer);
       localStorage.removeItem("session");
-      alert("⏰ WAKTU HABIS");
+      alert("⏰ WAKTU AKSES HABIS");
       lock();
     }
   },3000);
 }
 
+/* AUTO CHECK SAAT REFRESH */
 (function(){
   const s = JSON.parse(localStorage.getItem("session")||"null");
-  if(s && Date.now()<s.exp){
+  if(s && Date.now() < s.exp){
     unlock();
     monitor();
   }else{
