@@ -7,30 +7,43 @@
 
 <style>
 body{
-  background:#000;
-  color:#0ff;
-  font-family:Arial,Helvetica,sans-serif;
+  margin:0;
+  height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  height:100vh;
-  margin:0;
+  background:#000;
+  font-family:Arial,Helvetica,sans-serif;
 }
 
 #box{
-  width:320px;
+  width:340px;
   background:#0b0b10;
+  border-radius:18px;
   padding:20px;
-  border-radius:16px;
+  color:#cfffff;
+  box-shadow:0 0 30px #00f0ff;
   text-align:center;
-  box-shadow:0 0 25px #00f0ff;
+}
+
+h3{
+  margin-top:0;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:12px;
+  border:none;
+  font-size:14px;
 }
 
 button{
   width:100%;
   padding:12px;
-  border:none;
   border-radius:12px;
+  border:none;
   font-weight:bold;
   font-size:15px;
   background:linear-gradient(90deg,#00f0ff,#ff00ff);
@@ -53,19 +66,33 @@ pre{
 <body>
 
 <div id="box">
-  <h3>ADMIN TOKEN</h3>
+  <h3>ADMIN TOKEN GENERATOR</h3>
+
+  <input id="key" placeholder="Admin Key">
+  <input id="dur" type="number" placeholder="Durasi (detik)" value="60">
+
   <button onclick="generate()">GENERATE TOKEN</button>
-  <pre id="result">Klik Generate</pre>
+
+  <pre id="result">Masukkan admin key & durasi</pre>
 </div>
 
 <script>
 function generate(){
+  const key = document.getElementById("key").value.trim();
+  const duration = Number(document.getElementById("dur").value);
+
+  if(!key || !duration){
+    document.getElementById("result").textContent =
+      "❌ Admin key & durasi wajib diisi";
+    return;
+  }
+
   fetch("https://tokengta5.lmore000013.workers.dev/admin/create", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      key: "RAHASIA_SUPER_ADMIN_123",
-      duration: 60
+      key: key,
+      duration: duration
     })
   })
   .then(r => r.json())
@@ -73,9 +100,9 @@ function generate(){
     document.getElementById("result").textContent =
       JSON.stringify(d, null, 2);
   })
-  .catch(err => {
+  .catch(() => {
     document.getElementById("result").textContent =
-      "ERROR FETCH";
+      "❌ SERVER ERROR / FAILED FETCH";
   });
 }
 </script>
