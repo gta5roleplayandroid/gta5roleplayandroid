@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Thinkmay Admin</title>
+<style>
+body{
+  background:#020617;
+  color:white;
+  font-family:Arial;
+  padding:20px;
+}
+.box{
+  max-width:400px;
+  margin:auto;
+  border:1px solid #22c55e;
+  padding:20px;
+  border-radius:10px;
+}
+input,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  border:none;
+}
+button{ background:#22c55e;font-weight:bold }
+#out{margin-top:15px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h3>Admin Token Thinkmay</h3>
+
+  <input id="key" placeholder="Admin Key">
+  <input id="durasi" placeholder="Durasi (menit)" value="60">
+
+  <button onclick="buat()">➕ Generate Token</button>
+  <button onclick="hapus()">❌ Revoke Token</button>
+
+  <input id="token" placeholder="Token (untuk revoke)">
+  <div id="out"></div>
+</div>
+
+<script>
+const API = "https://tokengta5.lmore000013.workers.dev/admin";
+
+function buat(){
+  fetch(API,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      key: key.value,
+      durasi: +durasi.value
+    })
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    out.textContent = d.ok
+      ? "TOKEN BARU:\n" + d.token
+      : "❌ ADMIN KEY SALAH";
+  });
+}
+
+function hapus(){
+  fetch(API,{
+    method:"DELETE",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      key: key.value,
+      token: token.value
+    })
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    out.textContent = d.ok
+      ? "✅ TOKEN DIHAPUS"
+      : "❌ GAGAL";
+  });
+}
+</script>
+
+</body>
+</html>
