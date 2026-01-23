@@ -1,63 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Thinkmay Cloud Gate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input id="t" placeholder="Token akses">
+<button onclick="go()">MASUK</button>
+<div id="msg"></div>
+
 <script>
-/* =========================
-   CONFIG
-========================= */
-const WORKER_URL = "tokengta5.lmore000013.workers.dev"; // GANTI URL WORKER
-const TARGET_URL = "https://thinkmay.net";
-
-/* =========================
-   DEVICE ID (AMAN DI ANDROID)
-========================= */
-function getDeviceId(){
-  let id = localStorage.getItem("device_id");
-  if(!id){
-    id = "dev-" + Date.now() + "-" + Math.random().toString(36).slice(2);
-    localStorage.setItem("device_id", id);
-  }
-  return id;
-}
-
-/* =========================
-   TOKEN SUBMIT
-========================= */
 async function go(){
-  const input = document.getElementById("t");
-  const msg   = document.getElementById("msg");
-  const token = input.value.trim();
+  const t = document.getElementById("t").value.trim();
+  const msg = document.getElementById("msg");
 
-  if(!token){
-    msg.innerText = "❌ Token belum diisi";
+  if(!t){
+    msg.innerText="⚠️ Token kosong";
     return;
   }
 
-  msg.innerText = "⏳ Mengecek token...";
+  msg.innerText="⏳ Cek token...";
 
   try{
-    const res = await fetch(WORKER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        token: token,
-        device: getDeviceId()
-      })
-    });
+    const res = await fetch(
+      "https://tokengta5.lmore000013.workers.dev",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: t })
+      }
+    );
 
     const data = await res.json();
 
-    if(!data.ok){
-      msg.innerText =
-        data.msg === "TOKEN_EXPIRED" ? "❌ Token expired" :
-        data.msg === "TOKEN_USED"    ? "❌ Token sudah dipakai device lain" :
-        "❌ Token salah";
-      return;
+    if(data.ok){
+      document.body.innerHTML = `
+        <iframe src="https://thinkmay.net"
+        style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>
+      `;
+    }else{
+      msg.innerText="❌ Token salah";
     }
-
-    // ✅ SUKSES
-    document.getElementById("gate").remove();
-    window.location.replace(TARGET_URL);
-
   }catch(e){
-    msg.innerText = "❌ Gagal koneksi server";
+    msg.innerText="❌ Server token error";
   }
 }
 </script>
+
+</body>
+</html>
