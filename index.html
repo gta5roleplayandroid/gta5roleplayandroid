@@ -23,12 +23,14 @@ body{
 }
 .box{
   width:90%;
-  max-width:360px;
-  background:#111;
+  max-width:380px;
+  background:linear-gradient(180deg,#0b0b10,#050507);
   padding:20px;
-  border-radius:16px;
+  border-radius:18px;
   text-align:center;
-  box-shadow:0 0 25px #00ffff66;
+  box-shadow:
+    0 0 0 2px #00f0ff,
+    0 0 25px rgba(0,240,255,.7);
 }
 .box img{
   width:80px;
@@ -36,6 +38,46 @@ body{
   border-radius:50%;
   margin-bottom:10px;
 }
+.badge{
+  display:inline-block;
+  padding:4px 12px;
+  border-radius:999px;
+  font-size:11px;
+  background:#ff00ff;
+  color:#000;
+  margin-bottom:8px;
+}
+.ad{
+  background:#0e0e14;
+  border:1px solid #222;
+  border-radius:12px;
+  padding:10px;
+  margin:12px 0;
+  font-size:12px;
+  color:#ccc;
+}
+.ad img{
+  width:100%;
+  border-radius:10px;
+  margin-bottom:6px;
+}
+.socials{
+  display:flex;
+  gap:10px;
+  margin:10px 0;
+}
+.socials a{
+  flex:1;
+  padding:10px 0;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:bold;
+  text-decoration:none;
+  color:#000;
+}
+.tiktok{background:#00f0ff;}
+.discord{background:#ff00ff;}
+
 input{
   width:100%;
   padding:12px;
@@ -73,14 +115,49 @@ a{color:#0ff;text-decoration:none;font-size:14px}
 
 <div id="gate">
   <div class="box">
-    <img src="logo.png">
-    <h3>AKSES THINKMAY</h3>
-    <a href="https://discord.gg/" target="_blank">Join Discord</a>
+    <span class="badge">OFFICIAL ACCESS</span>
 
-    <input id="tokenInput" placeholder="Masukkan Token">
+    <img src="logo.png" alt="logo">
+
+    <h3 style="margin:6px 0">ThinkMay Cloud Gate</h3>
+
+    <p style="font-size:13px;color:#aaa;line-height:1.4">
+      Akses resmi Cloud ThinkMay<br>
+      Token hanya berlaku <b>1 perangkat</b>
+    </p>
+
+    <!-- IKLAN -->
+    <div class="ad">
+      <img src="https://i.imgur.com/7tkRRcQ.jpeg">
+      <b>GTA 5 ORIGINAL</b><br>
+      Steam & Rockstar Berlisensi<br>
+      Siap RP Android
+    </div>
+
+    <!-- SOSIAL -->
+    <div class="socials">
+      <a class="tiktok"
+         href="https://www.tiktok.com/@gta5roleplayandroid"
+         target="_blank">
+        Follow TikTok
+      </a>
+
+      <a class="discord"
+         href="https://discord.gg/JE9Y7W2Vuw"
+         target="_blank">
+        Join Discord
+      </a>
+    </div>
+
+    <!-- TOKEN -->
+    <input id="tokenInput" placeholder="Masukkan Token Akses">
     <button onclick="login()">MASUK</button>
 
     <div id="msg"></div>
+
+    <div style="font-size:11px;color:#666;margin-top:10px">
+      © ThinkMay Network
+    </div>
   </div>
 </div>
 
@@ -88,7 +165,6 @@ a{color:#0ff;text-decoration:none;font-size:14px}
 const API = "https://tokengta5.lmore000013.workers.dev";
 let timer = null;
 
-// AUTO LOGIN JIKA ADA TOKEN
 const saved = localStorage.getItem("thinkmay_token");
 if(saved){
   validate(saved);
