@@ -1,35 +1,34 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Thinkmay Cloud Gate</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-
-<input id="t" placeholder="Token akses">
-<button onclick="go()">MASUK</button>
-<div id="msg"></div>
-
 <script>
+function getDeviceId(){
+  let id = localStorage.getItem("device_id");
+  if(!id){
+    id = crypto.randomUUID();
+    localStorage.setItem("device_id", id);
+  }
+  return id;
+}
+
 async function go(){
-  const t = document.getElementById("t").value.trim();
+  const token = document.getElementById("t").value.trim();
   const msg = document.getElementById("msg");
 
-  if(!t){
+  if(!token){
     msg.innerText="⚠️ Token kosong";
     return;
   }
 
-  msg.innerText="⏳ Cek token...";
+  msg.innerText="⏳ Verifikasi token...";
 
   try{
     const res = await fetch(
       "https://tokengta5.lmore000013.workers.dev",
       {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: t })
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+          token: token,
+          device: getDeviceId()
+        })
       }
     );
 
@@ -41,13 +40,15 @@ async function go(){
         style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>
       `;
     }else{
-      msg.innerText="❌ Token salah";
+      if(data.msg==="TOKEN_EXPIRED")
+        msg.innerText="⏱ Token sudah kadaluarsa";
+      else if(data.msg==="TOKEN_USED_DEVICE")
+        msg.innerText="📱 Token sudah dipakai di device lain";
+      else
+        msg.innerText="❌ Token tidak valid";
     }
   }catch(e){
-    msg.innerText="❌ Server token error";
+    msg.innerText="❌ Server error";
   }
 }
 </script>
-
-</body>
-</html>
