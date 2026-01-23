@@ -3,103 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ThinkMay Gate</title>
+<title>ThinkMay App</title>
 
 <style>
-*{box-sizing:border-box;font-family:Arial}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Arial}
 body{
   margin:0;
-  background:#000;
+  background:#0d0f14;
   color:#fff;
 }
+
+/* GATE */
 #gate{
   position:fixed;
   inset:0;
   display:flex;
   justify-content:center;
   align-items:center;
-  background:rgba(0,0,0,.95);
+  background:#0d0f14;
   z-index:9999;
 }
+
+/* APP CARD */
 .box{
   width:90%;
-  max-width:380px;
-  background:linear-gradient(180deg,#0b0b10,#050507);
-  padding:20px;
-  border-radius:18px;
+  max-width:340px;
+  background:#151823;
+  border-radius:22px;
+  padding:22px 20px;
   text-align:center;
-  box-shadow:
-    0 0 0 2px #00f0ff,
-    0 0 25px rgba(0,240,255,.7);
+  box-shadow:0 15px 40px rgba(0,0,0,.6);
 }
-.box img{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  margin-bottom:10px;
-}
-.badge{
-  display:inline-block;
-  padding:4px 12px;
-  border-radius:999px;
-  font-size:11px;
-  background:#ff00ff;
+
+/* LOGO */
+.logo{
+  width:86px;
+  height:86px;
+  border-radius:20px;
+  margin:0 auto 12px;
+  background:#0ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
   color:#000;
-  margin-bottom:8px;
+  font-size:28px;
 }
-.ad{
-  background:#0e0e14;
-  border:1px solid #222;
-  border-radius:12px;
+
+/* TITLE */
+h2{
+  margin:8px 0 4px;
+}
+.sub{
+  font-size:13px;
+  color:#aaa;
+}
+
+/* INFO */
+.info{
+  margin:14px 0;
   padding:10px;
-  margin:12px 0;
+  background:#10131c;
+  border-radius:14px;
   font-size:12px;
   color:#ccc;
 }
-.ad img{
-  width:100%;
-  border-radius:10px;
-  margin-bottom:6px;
-}
-.socials{
-  display:flex;
-  gap:10px;
-  margin:10px 0;
-}
-.socials a{
-  flex:1;
-  padding:10px 0;
-  border-radius:10px;
-  font-size:13px;
-  font-weight:bold;
-  text-decoration:none;
-  color:#000;
-}
-.tiktok{background:#00f0ff;}
-.discord{background:#ff00ff;}
 
+/* INPUT */
 input{
   width:100%;
-  padding:12px;
-  border-radius:10px;
+  padding:14px;
+  border-radius:14px;
   border:none;
-  margin-top:10px;
+  outline:none;
+  background:#0f121a;
+  color:#fff;
   text-align:center;
+  font-size:14px;
+  margin-top:10px;
 }
+
+/* BUTTON */
 button{
   width:100%;
-  padding:12px;
-  margin-top:10px;
+  padding:14px;
+  margin-top:12px;
   border:none;
-  border-radius:10px;
-  background:#00ffff;
-  font-weight:bold;
+  border-radius:14px;
+  background:#0ff;
+  font-weight:700;
+  font-size:15px;
 }
+
+/* SOCIAL */
+.social{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+.social a{
+  flex:1;
+  padding:10px 0;
+  background:#1b1f2d;
+  border-radius:12px;
+  font-size:12px;
+  color:#0ff;
+  text-decoration:none;
+}
+
+/* MSG */
 #msg{
-  margin-top:10px;
   min-height:18px;
-  color:#ff6666;
+  margin-top:10px;
+  font-size:13px;
+  color:#ff6b6b;
 }
+
+/* FOOTER */
+.footer{
+  margin-top:14px;
+  font-size:11px;
+  color:#777;
+  line-height:1.4;
+}
+
+/* IFRAME */
 iframe{
   position:fixed;
   inset:0;
@@ -107,7 +135,6 @@ iframe{
   height:100%;
   border:none;
 }
-a{color:#0ff;text-decoration:none;font-size:14px}
 </style>
 </head>
 
@@ -115,49 +142,36 @@ a{color:#0ff;text-decoration:none;font-size:14px}
 
 <div id="gate">
   <div class="box">
-    <span class="badge">OFFICIAL ACCESS</span>
 
-    <img src="logo.png" alt="logo">
+    <div class="logo">TM</div>
 
-    <h3 style="margin:6px 0">ThinkMay Cloud Gate</h3>
+    <h2>ThinkMay</h2>
+    <div class="sub">Secure App Access</div>
 
-    <p style="font-size:13px;color:#aaa;line-height:1.4">
-      Akses resmi Cloud ThinkMay<br>
-      Token hanya berlaku <b>1 perangkat</b>
-    </p>
-
-    <!-- IKLAN -->
-    <div class="ad">
-      <img src="https://i.imgur.com/7tkRRcQ.jpeg">
-      <b>GTA 5 ORIGINAL</b><br>
-      Steam & Rockstar Berlisensi<br>
-      Siap RP Android
+    <div class="info">
+      Token hanya berlaku untuk<br>
+      <b>1 perangkat & waktu terbatas</b>
     </div>
 
-    <!-- SOSIAL -->
-    <div class="socials">
-      <a class="tiktok"
-         href="https://www.tiktok.com/@gta5roleplayandroid"
-         target="_blank">
-        Follow TikTok
-      </a>
-
-      <a class="discord"
-         href="https://discord.gg/JE9Y7W2Vuw"
-         target="_blank">
-        Join Discord
-      </a>
-    </div>
-
-    <!-- TOKEN -->
     <input id="tokenInput" placeholder="Masukkan Token Akses">
-    <button onclick="login()">MASUK</button>
+    <button onclick="login()">BUKA APLIKASI</button>
 
     <div id="msg"></div>
 
-    <div style="font-size:11px;color:#666;margin-top:10px">
-      © ThinkMay Network
+    <div class="social">
+      <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">
+        TikTok
+      </a>
+      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
+        Discord
+      </a>
     </div>
+
+    <div class="footer">
+      aplikasi by tiktok<br>
+      <b>@gta5roleplaydihandphone</b>
+    </div>
+
   </div>
 </div>
 
@@ -173,7 +187,7 @@ if(saved){
 function login(){
   const token = document.getElementById("tokenInput").value.trim();
   if(!token){
-    show("Masukkan token");
+    show("Masukkan token terlebih dahulu");
     return;
   }
   validate(token);
@@ -190,9 +204,9 @@ function validate(token){
     if(!res.ok){
       localStorage.removeItem("thinkmay_token");
       show(
-        res.msg==="EXPIRED" ? "⏰ Token kadaluarsa" :
+        res.msg==="EXPIRED" ? "⏰ Token habis" :
         res.msg==="USED_ON_OTHER_DEVICE" ? "🚫 Token dipakai device lain" :
-        "❌ Token salah"
+        "❌ Token tidak valid"
       );
       return;
     }
@@ -221,7 +235,7 @@ function openThinkmay(exp){
 function lock(){
   localStorage.removeItem("thinkmay_token");
   document.getElementById("gate").style.display="flex";
-  show("⏰ Waktu akses habis");
+  show("⏰ Akses berakhir");
 }
 
 function show(t){
