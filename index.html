@@ -17,7 +17,7 @@ async function go(){
     return;
   }
 
-  msg.innerText="⏳ Verifikasi token...";
+  msg.innerText="⏳ Mengecek token...";
 
   try{
     const res = await fetch(
@@ -40,15 +40,15 @@ async function go(){
         style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>
       `;
     }else{
-      if(data.msg==="TOKEN_EXPIRED")
-        msg.innerText="⏱ Token sudah kadaluarsa";
-      else if(data.msg==="TOKEN_USED_DEVICE")
-        msg.innerText="📱 Token sudah dipakai di device lain";
-      else
-        msg.innerText="❌ Token tidak valid";
+      const map = {
+        TOKEN_EXPIRED: "⏱ Token sudah kadaluarsa",
+        TOKEN_USED_DEVICE: "📱 Token sudah dipakai di device lain",
+        TOKEN_INVALID: "❌ Token tidak valid"
+      };
+      msg.innerText = map[data.msg] || "❌ Token ditolak";
     }
   }catch(e){
-    msg.innerText="❌ Server error";
+    msg.innerText="❌ Server token error";
   }
 }
 </script>
