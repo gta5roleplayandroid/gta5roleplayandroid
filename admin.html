@@ -1,111 +1,41 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Token Generator</title>
-
+<title>ADMIN TOKEN</title>
 <style>
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#000;
-  font-family:Arial,Helvetica,sans-serif;
-}
-
-#box{
-  width:340px;
-  background:#0b0b10;
-  border-radius:18px;
-  padding:20px;
-  color:#cfffff;
-  box-shadow:0 0 30px #00f0ff;
-  text-align:center;
-}
-
-h3{
-  margin-top:0;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  margin-bottom:10px;
-  border-radius:12px;
-  border:none;
-  font-size:14px;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  font-weight:bold;
-  font-size:15px;
-  background:linear-gradient(90deg,#00f0ff,#ff00ff);
-  cursor:pointer;
-}
-
-pre{
-  margin-top:12px;
-  background:#000;
-  padding:10px;
-  border-radius:10px;
-  color:#0f0;
-  font-size:13px;
-  white-space:pre-wrap;
-  word-break:break-all;
-}
+body{font-family:Arial;background:#000;color:#fff;padding:20px}
+input,button{width:100%;padding:12px;margin-top:10px}
+button{background:#0ff;border:none;font-weight:bold}
+pre{margin-top:15px;white-space:pre-wrap}
 </style>
 </head>
 
 <body>
+<h3>ADMIN TOKEN GENERATOR</h3>
 
-<div id="box">
-  <h3>ADMIN TOKEN GENERATOR</h3>
+<input id="key" placeholder="Admin Key">
+<input id="time" placeholder="Durasi (detik)">
+<button onclick="gen()">GENERATE</button>
 
-  <input id="key" placeholder="Admin Key">
-  <input id="dur" type="number" placeholder="Durasi (detik)" value="60">
-
-  <button onclick="generate()">GENERATE TOKEN</button>
-
-  <pre id="result">Masukkan admin key & durasi</pre>
-</div>
+<pre id="out"></pre>
 
 <script>
-function generate(){
-  const key = document.getElementById("key").value.trim();
-  const duration = Number(document.getElementById("dur").value);
-
-  if(!key || !duration){
-    document.getElementById("result").textContent =
-      "❌ Admin key & durasi wajib diisi";
-    return;
-  }
-
-  fetch("https://tokengta5.lmore000013.workers.dev/admin/create", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+function gen(){
+  fetch("https://tokengta5.lmore000013.workers.dev/admin/create",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({
-      key: key,
-      duration: duration
+      adminKey: document.getElementById("key").value,
+      duration: document.getElementById("time").value
     })
   })
-  .then(r => r.json())
-  .then(d => {
-    document.getElementById("result").textContent =
-      JSON.stringify(d, null, 2);
+  .then(r=>r.json())
+  .then(d=>{
+    document.getElementById("out").innerText =
+      JSON.stringify(d,null,2);
   })
-  .catch(() => {
-    document.getElementById("result").textContent =
-      "❌ SERVER ERROR / FAILED FETCH";
-  });
 }
 </script>
-
 </body>
 </html>
