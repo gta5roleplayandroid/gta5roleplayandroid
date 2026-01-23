@@ -1,45 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Thinkmay Cloud Gate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  margin:0;
+  background:#000;
+  font-family:Arial,sans-serif;
+}
+#gate{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,.9);
+  z-index:9999;
+}
+#box{
+  width:320px;
+  background:#0b0b10;
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+  color:#bffcff;
+  box-shadow:0 0 20px #00f0ff;
+}
+input,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+  font-size:14px;
+}
+button{
+  background:linear-gradient(90deg,#00f0ff,#ff00ff);
+  font-weight:bold;
+}
+#msg{
+  margin-top:8px;
+  font-size:13px;
+  color:#ff6b6b;
+}
+iframe{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div id="box">
+    <h3>MASUK THINKMAY</h3>
+    <input id="t" placeholder="Token akses">
+    <button onclick="login()">MASUK</button>
+    <div id="msg"></div>
+  </div>
+</div>
+
 <script>
-function deviceId(){
+const API = "https://tokengta5.lmore000013.workers.dev";
+
+function getDevice(){
   let d = localStorage.getItem("DEVICE_ID");
   if(!d){
-    d = crypto.randomUUID();
+    d = "dev-" + Math.random().toString(36).slice(2);
     localStorage.setItem("DEVICE_ID", d);
   }
   return d;
 }
 
-function go(){
-  const token = document.getElementById("t").value.trim();
+function showThinkmay(){
+  document.getElementById("gate")?.remove();
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `<iframe src="https://thinkmay.net"></iframe>`
+  );
+}
 
-  fetch("https://tokengta5.lmore000013.workers.dev/check",{
+function login(){
+  const token = document.getElementById("t").value.trim();
+  fetch(API + "/check",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body:JSON.stringify({
       token: token,
-      device: deviceId()
+      device: getDevice()
     })
   })
   .then(r=>r.json())
   .then(j=>{
     if(j.ok){
-      localStorage.setItem("TOKEN_OK","1");
-      document.getElementById("gate").remove();
-      document.body.innerHTML +=
-        `<iframe src="https://thinkmay.net"></iframe>`;
+      localStorage.setItem("TOKEN_OK", token);
+      showThinkmay();
     }else{
       document.getElementById("msg").innerText =
-        "❌ "+(j.error || "Token invalid");
+        "❌ " + (j.error || "Token salah");
     }
   })
-  .catch(e=>{
+  .catch(()=>{
     document.getElementById("msg").innerText="❌ SERVER ERROR";
   });
 }
 
-// AUTO LOGIN SAAT REFRESH
-if(localStorage.getItem("TOKEN_OK")==="1"){
-  document.getElementById("gate")?.remove();
-  document.body.innerHTML +=
-    `<iframe src="https://thinkmay.net"></iframe>`;
+// AUTO LOGIN (REFRESH)
+if(localStorage.getItem("TOKEN_OK")){
+  showThinkmay();
 }
 </script>
+
+</body>
+</html>
