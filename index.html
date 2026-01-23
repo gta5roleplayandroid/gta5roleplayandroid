@@ -21,6 +21,23 @@ body{
   background:rgba(0,0,0,.9);
   z-index:9999;
 }
+
+/* === ANIMATION === */
+@keyframes popupIn{
+  from{opacity:0;transform:scale(.85) translateY(30px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+@keyframes popupOut{
+  from{opacity:1;transform:scale(1)}
+  to{opacity:0;transform:scale(.85)}
+}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}
+  75%{transform:translateX(-6px)}
+}
+
 .box{
   width:90%;
   max-width:360px;
@@ -28,13 +45,21 @@ body{
   border-radius:22px;
   background:linear-gradient(270deg,#00ffff,#ff00ff,#00ff88,#00ffff);
   background-size:400% 400%;
-  animation:rgb 6s linear infinite;
+  animation:rgb 6s linear infinite, popupIn .45s ease;
 }
+.box.closing{
+  animation:popupOut .35s ease forwards;
+}
+.box.error{
+  animation:shake .35s;
+}
+
 @keyframes rgb{
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
 }
+
 .inner{
   background:#0b0e17;
   border-radius:20px;
@@ -42,14 +67,12 @@ body{
   text-align:center;
 }
 
-/* === TEXT AREA === */
+/* === TEXT === */
 .appby{
   font-size:13px;
   color:#00ffff;
   margin-bottom:12px;
-  line-height:1.4;
 }
-
 .logo-wrap{
   width:90px;
   height:90px;
@@ -71,17 +94,13 @@ body{
   height:100%;
   object-fit:cover;
 }
-
 .desc{
   font-size:13px;
   line-height:1.6;
   margin-bottom:14px;
   color:#ddd;
 }
-.desc b{
-  font-weight:800;
-  color:#fff;
-}
+.desc b{font-weight:800;color:#fff}
 
 /* === FORM === */
 input{
@@ -128,12 +147,11 @@ button{
   text-decoration:none;
 }
 
-/* === FOOTER TEXT === */
+/* === FOOTER === */
 .footer{
   margin-top:12px;
   font-size:11px;
   color:#aaa;
-  line-height:1.5;
 }
 
 iframe{
@@ -149,10 +167,9 @@ iframe{
 <body>
 
 <div id="gate">
-  <div class="box">
+  <div class="box" id="popupBox">
     <div class="inner">
 
-      <!-- TEXT SESUAI GAMBAR -->
       <div class="appby">
         Aplikasi by<br>
         TikTok <b>@gta5roleplaydihandphone</b>
@@ -166,28 +183,20 @@ iframe{
 
       <div class="desc">
         Ready Akun Steam <b>GTA 5 Original</b>, Akun Rockstar<br>
-        <b>Berlicense</b> Atau Berlangganan Cloud <b>Thinkmay</b><br><br>
-        Silakan Join Discord untuk info & order
+        <b>Berlicense</b> dan Langganan Cloud <b>Thinkmay</b>
       </div>
 
-      <!-- TOKEN -->
       <input id="tokenInput" placeholder="Masukkan Token Akses">
       <button onclick="login()">MASUK APLIKASI</button>
-
       <div id="msg"></div>
 
-      <!-- BUTTON -->
       <div class="social">
-        <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">
-          Follow TikTok
-        </a>
-        <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
-          Join Discord
-        </a>
+        <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">Follow TikTok</a>
+        <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">Join Discord</a>
       </div>
 
       <div class="footer">
-        Sumber halaman : www.thinkmay.net
+        Sumber Website : www.thinkmay.net
       </div>
 
     </div>
@@ -204,6 +213,7 @@ function login(){
   if(!t){msg.innerText="Masukkan token";return;}
   validate(t);
 }
+
 function validate(token){
   fetch(API,{
     method:"POST",
@@ -218,6 +228,9 @@ function validate(token){
         res.msg==="EXPIRED"?"⏰ Token habis":
         res.msg==="USED_ON_OTHER_DEVICE"?"🚫 Token dipakai device lain":
         "❌ Token salah";
+
+      popupBox.classList.add("error");
+      setTimeout(()=>popupBox.classList.remove("error"),350);
       return;
     }
     localStorage.setItem("thinkmay_token",token);
@@ -225,14 +238,19 @@ function validate(token){
   })
   .catch(()=>msg.innerText="⚠ Server error");
 }
+
 function openApp(exp){
-  gate.style.display="none";
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    `<iframe src="https://thinkmay.net"></iframe>`
-  );
+  popupBox.classList.add("closing");
+  setTimeout(()=>{
+    gate.style.display="none";
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `<iframe src="https://thinkmay.net"></iframe>`
+    );
+  },350);
   setTimeout(lock, exp-Date.now());
 }
+
 function lock(){
   localStorage.removeItem("thinkmay_token");
   gate.style.display="flex";
