@@ -2,36 +2,87 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Token Akses</title>
+  <title>Thinkmay Gate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: #020617;
+      padding: 25px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      margin-top: 12px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      background: #22c55e;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #hasil {
+      margin-top: 15px;
+    }
+  </style>
 </head>
 <body>
 
-<h2>Masukkan Token</h2>
-<input id="token" placeholder="Contoh: ABC123">
-<button onclick="cekToken()">MASUK</button>
-
-<p id="hasil"></p>
+<div class="box">
+  <h3>Token Akses</h3>
+  <input id="token" placeholder="Masukkan token">
+  <button onclick="cekToken()">MASUK</button>
+  <div id="hasil"></div>
+</div>
 
 <script>
-async function cekToken() {
+const THINKMAY_URL = "https://THINKMAY.NET"; // 🔴 GANTI INI
+
+// kalau sudah lolos → langsung masuk
+if (localStorage.getItem("thinkmay_ok") === "1") {
+  window.location.href = THINKMAY_URL;
+}
+
+function cekToken() {
   const token = document.getElementById("token").value;
 
-  const res = await fetch("https://tokengta5.lmore000013.workers.dev", {
+  fetch("https://tokengta5.lmore000013.workers.dev", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      token: token,
-      device: navigator.userAgent
-    })
+    body: JSON.stringify({ token })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.ok) {
+      document.getElementById("hasil").innerText = "✅ TOKEN AKSES DITERIMA";
+      localStorage.setItem("thinkmay_ok", "1");
+
+      setTimeout(() => {
+        window.location.href = THINKMAY_URL;
+      }, 1000);
+    } else {
+      document.getElementById("hasil").innerText = "❌ TOKEN SALAH / EXPIRED";
+    }
+  })
+  .catch(() => {
+    document.getElementById("hasil").innerText = "⚠️ SERVER ERROR";
   });
-
-  const data = await res.json();
-
-  if (data.ok) {
-    document.getElementById("hasil").innerText = "✅ Token valid, akses diterima";
-  } else {
-    document.getElementById("hasil").innerText = "❌ Token salah / expired";
-  }
 }
 </script>
 
