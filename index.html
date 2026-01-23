@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ThinkMay App</title>
+<title>ThinkMay Gate</title>
 
 <style>
-*{box-sizing:border-box;font-family:system-ui,-apple-system,Arial}
+*{box-sizing:border-box;font-family:system-ui,Arial}
 body{
   margin:0;
-  background:#0d0f14;
+  background:#05060a;
   color:#fff;
 }
 
@@ -20,38 +20,57 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:#0d0f14;
+  background:rgba(0,0,0,.9);
   z-index:9999;
 }
 
-/* APP CARD */
+/* RGB BORDER */
 .box{
   width:90%;
-  max-width:340px;
-  background:#151823;
+  max-width:360px;
+  padding:3px;
   border-radius:22px;
-  padding:22px 20px;
+  background:linear-gradient(270deg,#00ffff,#ff00ff,#00ff88,#00ffff);
+  background-size:600% 600%;
+  animation:rgb 6s linear infinite;
+}
+
+@keyframes rgb{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* INNER */
+.inner{
+  background:#0b0e17;
+  border-radius:20px;
+  padding:22px 18px;
   text-align:center;
-  box-shadow:0 15px 40px rgba(0,0,0,.6);
 }
 
 /* LOGO */
 .logo{
-  width:86px;
-  height:86px;
-  border-radius:20px;
+  width:90px;
+  height:90px;
   margin:0 auto 12px;
-  background:#0ff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  color:#000;
-  font-size:28px;
+  border-radius:50%;
+  overflow:hidden;
+  animation:spin 10s linear infinite;
+}
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-/* TITLE */
-h2{
+@keyframes spin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+/* TEXT */
+h3{
   margin:8px 0 4px;
 }
 .sub{
@@ -59,28 +78,17 @@ h2{
   color:#aaa;
 }
 
-/* INFO */
-.info{
-  margin:14px 0;
-  padding:10px;
-  background:#10131c;
-  border-radius:14px;
-  font-size:12px;
-  color:#ccc;
-}
-
 /* INPUT */
 input{
   width:100%;
   padding:14px;
+  margin-top:14px;
   border-radius:14px;
   border:none;
   outline:none;
-  background:#0f121a;
+  background:#12162a;
   color:#fff;
   text-align:center;
-  font-size:14px;
-  margin-top:10px;
 }
 
 /* BUTTON */
@@ -90,9 +98,9 @@ button{
   margin-top:12px;
   border:none;
   border-radius:14px;
-  background:#0ff;
+  background:linear-gradient(90deg,#00ffff,#ff00ff);
   font-weight:700;
-  font-size:15px;
+  color:#000;
 }
 
 /* SOCIAL */
@@ -104,7 +112,7 @@ button{
 .social a{
   flex:1;
   padding:10px 0;
-  background:#1b1f2d;
+  background:#141833;
   border-radius:12px;
   font-size:12px;
   color:#0ff;
@@ -142,54 +150,49 @@ iframe{
 
 <div id="gate">
   <div class="box">
+    <div class="inner">
 
-    <div class="logo">TM</div>
+      <div class="logo">
+        <!-- GANTI logo.png DENGAN LOGO KAMU -->
+        <img src="logo.png">
+      </div>
 
-    <h2>ThinkMay</h2>
-    <div class="sub">Secure App Access</div>
+      <h3>ThinkMay</h3>
+      <div class="sub">Secure App Access</div>
 
-    <div class="info">
-      Token hanya berlaku untuk<br>
-      <b>1 perangkat & waktu terbatas</b>
+      <input id="tokenInput" placeholder="Masukkan Token Akses">
+      <button onclick="login()">MASUK APLIKASI</button>
+
+      <div id="msg"></div>
+
+      <div class="social">
+        <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">
+          Follow TikTok
+        </a>
+        <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
+          Join Discord
+        </a>
+      </div>
+
+      <div class="footer">
+        aplikasi by tiktok<br>
+        <b>@gta5roleplaydihandphone</b>
+      </div>
+
     </div>
-
-    <input id="tokenInput" placeholder="Masukkan Token Akses">
-    <button onclick="login()">BUKA APLIKASI</button>
-
-    <div id="msg"></div>
-
-    <div class="social">
-      <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">
-        TikTok
-      </a>
-      <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">
-        Discord
-      </a>
-    </div>
-
-    <div class="footer">
-      aplikasi by tiktok<br>
-      <b>@gta5roleplaydihandphone</b>
-    </div>
-
   </div>
 </div>
 
 <script>
 const API = "https://tokengta5.lmore000013.workers.dev";
-let timer = null;
+let timer=null;
 
 const saved = localStorage.getItem("thinkmay_token");
-if(saved){
-  validate(saved);
-}
+if(saved) validate(saved);
 
 function login(){
-  const token = document.getElementById("tokenInput").value.trim();
-  if(!token){
-    show("Masukkan token terlebih dahulu");
-    return;
-  }
+  const token = tokenInput.value.trim();
+  if(!token){show("Masukkan token");return;}
   validate(token);
 }
 
@@ -197,50 +200,42 @@ function validate(token){
   fetch(API,{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ token })
+    body:JSON.stringify({token})
   })
   .then(r=>r.json())
   .then(res=>{
     if(!res.ok){
       localStorage.removeItem("thinkmay_token");
       show(
-        res.msg==="EXPIRED" ? "⏰ Token habis" :
-        res.msg==="USED_ON_OTHER_DEVICE" ? "🚫 Token dipakai device lain" :
-        "❌ Token tidak valid"
+        res.msg==="EXPIRED"?"⏰ Token habis":
+        res.msg==="USED_ON_OTHER_DEVICE"?"🚫 Dipakai device lain":
+        "❌ Token salah"
       );
       return;
     }
-
-    localStorage.setItem("thinkmay_token", token);
-    openThinkmay(res.exp);
+    localStorage.setItem("thinkmay_token",token);
+    openApp(res.exp);
   })
-  .catch(()=>{
-    show("⚠ Server error");
-  });
+  .catch(()=>show("⚠ Server error"));
 }
 
-function openThinkmay(exp){
-  document.getElementById("gate").style.display="none";
+function openApp(exp){
+  gate.style.display="none";
   document.body.insertAdjacentHTML(
     "beforeend",
     `<iframe src="https://thinkmay.net"></iframe>`
   );
-
-  const sisa = exp - Date.now();
-  if(sisa > 0){
-    timer = setTimeout(lock, sisa);
-  }
+  const sisa=exp-Date.now();
+  if(sisa>0) timer=setTimeout(lock,sisa);
 }
 
 function lock(){
   localStorage.removeItem("thinkmay_token");
-  document.getElementById("gate").style.display="flex";
-  show("⏰ Akses berakhir");
+  gate.style.display="flex";
+  show("⏰ Waktu akses habis");
 }
 
-function show(t){
-  document.getElementById("msg").innerText = t;
-}
+function show(t){msg.innerText=t;}
 </script>
 
 </body>
