@@ -10,23 +10,23 @@ body{
   background:#000;
   font-family:Arial,sans-serif;
 }
-#gate{
+#gate,#lock{
   position:fixed;
   inset:0;
   display:flex;
   justify-content:center;
   align-items:center;
-  background:rgba(0,0,0,.9);
+  background:rgba(0,0,0,.95);
   z-index:9999;
 }
 #box{
   width:320px;
   background:#0b0b10;
   border-radius:18px;
-  padding:20px;
+  padding:22px;
   text-align:center;
   color:#bffcff;
-  box-shadow:0 0 20px #00f0ff;
+  box-shadow:0 0 25px #00f0ff;
 }
 input,button{
   width:100%;
@@ -51,11 +51,15 @@ iframe{
   width:100%;
   height:100%;
   border:0;
+  z-index:1;
 }
+#lock{display:none;}
 </style>
 </head>
+
 <body>
 
+<!-- GATE -->
 <div id="gate">
   <div id="box">
     <h3>MASUK THINKMAY</h3>
@@ -65,9 +69,22 @@ iframe{
   </div>
 </div>
 
+<!-- LOCK SCREEN -->
+<div id="lock">
+  <div id="box" style="box-shadow:0 0 25px #ff0055;">
+    <h3 style="color:#ff5b5b;">⏰ WAKTU HABIS</h3>
+    <p style="font-size:14px;color:#fff;">
+      Masa aktif token kamu sudah berakhir.<br>
+      Silakan masukkan token baru.
+    </p>
+    <button onclick="location.reload()">MASUKKAN TOKEN</button>
+  </div>
+</div>
+
 <script>
 const API = "https://tokengta5.lmore000013.workers.dev";
 
+/* DEVICE ID */
 function getDevice(){
   let d = localStorage.getItem("DEVICE_ID");
   if(!d){
@@ -77,17 +94,30 @@ function getDevice(){
   return d;
 }
 
+/* TAMPILKAN THINKMAY */
 function showThinkmay(){
-  document.getElementById("gate")?.remove();
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    `<iframe src="https://thinkmay.net"></iframe>`
-  );
+  document.getElementById("gate").style.display="none";
+  document.getElementById("lock").style.display="none";
+  if(!document.querySelector("iframe")){
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `<iframe src="https://thinkmay.net"></iframe>`
+    );
+  }
 }
 
+/* KUNCI LAYAR */
+function lockScreen(){
+  document.querySelector("iframe")?.remove();
+  localStorage.removeItem("TOKEN_OK");
+  document.getElementById("gate").style.display="none";
+  document.getElementById("lock").style.display="flex";
+}
+
+/* LOGIN TOKEN */
 function login(){
   const token = document.getElementById("t").value.trim();
-  fetch(API + "/check",{
+  fetch(API+"/check",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body:JSON.stringify({
@@ -110,10 +140,33 @@ function login(){
   });
 }
 
-// AUTO LOGIN (REFRESH)
-if(localStorage.getItem("TOKEN_OK")){
-  showThinkmay();
+/* AUTO LOGIN + AUTO EXPIRE CHECK */
+function autoLogin(){
+  const token = localStorage.getItem("TOKEN_OK");
+  if(!token) return;
+
+  fetch(API+"/check",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      token: token,
+      device: getDevice()
+    })
+  })
+  .then(r=>r.json())
+  .then(j=>{
+    if(j.ok){
+      showThinkmay();
+    }else{
+      lockScreen();
+    }
+  })
+  .catch(()=>{
+    lockScreen();
+  });
 }
+
+autoLogin();
 </script>
 
 </body>
