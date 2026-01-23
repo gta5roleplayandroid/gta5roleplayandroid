@@ -12,6 +12,8 @@ body{
   background:#05060a;
   color:#fff;
 }
+
+/* === GATE === */
 #gate{
   position:fixed;
   inset:0;
@@ -22,22 +24,7 @@ body{
   z-index:9999;
 }
 
-/* === ANIMATION === */
-@keyframes popupIn{
-  from{opacity:0;transform:scale(.9) translateY(25px)}
-  to{opacity:1;transform:scale(1) translateY(0)}
-}
-@keyframes popupOut{
-  from{opacity:1;transform:scale(1)}
-  to{opacity:0;transform:scale(.9)}
-}
-@keyframes shake{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(-6px)}
-  50%{transform:translateX(6px)}
-  75%{transform:translateX(-6px)}
-}
-
+/* === BOX RGB === */
 .box{
   width:90%;
   max-width:360px;
@@ -45,29 +32,36 @@ body{
   border-radius:22px;
   background:linear-gradient(270deg,#00ffff,#ff00ff,#00ff88,#00ffff);
   background-size:400% 400%;
-  animation:rgb 6s linear infinite, popupIn .45s ease;
+  animation:rgb 6s linear infinite, popIn .45s ease;
 }
-.box.closing{animation:popupOut .35s ease forwards}
-.box.error{animation:shake .35s}
-
 @keyframes rgb{
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
 }
+@keyframes popIn{
+  from{opacity:0;transform:scale(.9)}
+  to{opacity:1;transform:scale(1)}
+}
+.box.closing{
+  animation:popOut .35s ease forwards;
+}
+@keyframes popOut{
+  to{opacity:0;transform:scale(.9)}
+}
 
 .inner{
   background:#0b0e17;
   border-radius:20px;
-  padding:18px 18px 16px;
+  padding:18px 16px;
   text-align:center;
 }
 
 /* === LOGO === */
 .logo-wrap{
-  width:88px;
-  height:88px;
-  margin:0 auto 6px;
+  width:86px;
+  height:86px;
+  margin:0 auto 8px;
   border-radius:50%;
   padding:3px;
   background:linear-gradient(270deg,#00ffff,#ff00ff,#00ff88,#00ffff);
@@ -86,28 +80,29 @@ body{
   object-fit:cover;
 }
 
-/* === APP BY (PINDAH KE BAWAH LOGO) === */
+/* === TEXT === */
 .appby{
   font-size:12.5px;
   color:#00ffff;
   margin-bottom:10px;
   line-height:1.4;
 }
-
-/* === DESC === */
 .desc{
   font-size:13px;
-  line-height:1.55;
+  line-height:1.5;
   margin-bottom:12px;
   color:#ddd;
 }
-.desc b{font-weight:800;color:#fff}
+.desc b{
+  font-weight:800;
+  color:#fff;
+}
 
 /* === FORM === */
 input{
   width:100%;
   padding:13px;
-  margin-top:6px;
+  margin-top:8px;
   border-radius:14px;
   border:none;
   background:#12162a;
@@ -131,7 +126,7 @@ button{
   color:#ff6b6b;
 }
 
-/* === SOCIAL (DIPADETIN) === */
+/* === SOCIAL === */
 .social{
   display:flex;
   gap:8px;
@@ -142,7 +137,7 @@ button{
   padding:11px 0;
   background:linear-gradient(90deg,#00ffff,#ff00ff);
   border-radius:14px;
-  font-size:13px;
+  font-size:12.5px;
   font-weight:700;
   color:#000;
   text-decoration:none;
@@ -150,9 +145,33 @@ button{
 
 /* === FOOTER === */
 .footer{
-  margin-top:10px;
+  margin-top:8px;
   font-size:11px;
   color:#aaa;
+}
+
+/* === TIMEOUT POPUP === */
+#timeoutPopup{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,.75);
+  z-index:10000;
+}
+.timeoutBox{
+  background:#0b0e17;
+  border:2px solid #ff4d4d;
+  padding:20px 24px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 0 25px #ff4d4d88;
+  animation:pulse .8s infinite alternate;
+}
+@keyframes pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.05)}
 }
 
 iframe{
@@ -184,7 +203,8 @@ iframe{
 
       <div class="desc">
         Ready Akun Steam <b>GTA 5 Original</b>, Akun Rockstar<br>
-        <b>Berlicense</b> dan Langganan Cloud <b>Thinkmay</b>
+        <b>Berlicense</b> dan Langganan Cloud <b>Thinkmay</b><br>
+        Silakan Join Discord untuk info & order
       </div>
 
       <input id="tokenInput" placeholder="Masukkan Token Akses">
@@ -204,8 +224,18 @@ iframe{
   </div>
 </div>
 
+<!-- TIMEOUT -->
+<div id="timeoutPopup">
+  <div class="timeoutBox">
+    ⏰ Waktu akses akan habis dalam<br>
+    <b><span id="countdown">10</span> detik</b>
+  </div>
+</div>
+
 <script>
 const API="https://tokengta5.lmore000013.workers.dev";
+let warnTimer,endTimer;
+
 const saved=localStorage.getItem("thinkmay_token");
 if(saved) validate(saved);
 
@@ -229,8 +259,6 @@ function validate(token){
         res.msg==="EXPIRED"?"⏰ Token habis":
         res.msg==="USED_ON_OTHER_DEVICE"?"🚫 Token dipakai device lain":
         "❌ Token salah";
-      popupBox.classList.add("error");
-      setTimeout(()=>popupBox.classList.remove("error"),350);
       return;
     }
     localStorage.setItem("thinkmay_token",token);
@@ -245,15 +273,34 @@ function openApp(exp){
     gate.style.display="none";
     document.body.insertAdjacentHTML(
       "beforeend",
-      `<iframe src="https://thinkmay.net"></iframe>`
+      `<iframe id="appFrame" src="https://thinkmay.net"></iframe>`
     );
   },350);
-  setTimeout(lock, exp-Date.now());
+
+  const sisa=exp-Date.now();
+  if(sisa>10000) warnTimer=setTimeout(showTimeout,sisa-10000);
+  endTimer=setTimeout(lock,sisa);
+}
+
+function showTimeout(){
+  let s=10;
+  countdown.innerText=s;
+  timeoutPopup.style.display="flex";
+  const cd=setInterval(()=>{
+    s--; countdown.innerText=s;
+    if(s<=0) clearInterval(cd);
+  },1000);
 }
 
 function lock(){
+  clearTimeout(warnTimer);
+  clearTimeout(endTimer);
   localStorage.removeItem("thinkmay_token");
+  const f=document.getElementById("appFrame");
+  if(f) f.remove();
+  timeoutPopup.style.display="none";
   gate.style.display="flex";
+  popupBox.classList.remove("closing");
   msg.innerText="⏰ Waktu akses habis";
 }
 </script>
