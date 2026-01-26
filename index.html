@@ -11,131 +11,158 @@ body{
   margin:0;
   background:#05060a;
   color:#fff;
+  cursor: auto;
+}
+
+/* ===== HIDE ANDROID CURSOR ===== */
+body.cloud-active,
+body.cloud-active *{
+  cursor: none !important;
+}
+
+/* ===== GATE ===== */
+#gate{
+  position:fixed;
+  inset:0;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
+  background:rgba(0,0,0,.9);
+  z-index:9999;
 }
 
+/* ===== BOX ===== */
 .box{
   width:90%;
   max-width:360px;
-  padding:20px;
-  border-radius:18px;
+  padding:3px;
+  border-radius:22px;
+  background:linear-gradient(270deg,#00ffff,#ff00ff,#00ff88,#00ffff);
+  background-size:400% 400%;
+  animation:rgb 6s linear infinite, popIn .4s ease;
+}
+@keyframes rgb{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes popIn{
+  from{opacity:0;transform:scale(.9)}
+  to{opacity:1;transform:scale(1)}
+}
+.box.closing{
+  animation:popOut .35s ease forwards;
+}
+@keyframes popOut{
+  to{opacity:0;transform:scale(.9)}
+}
+
+.inner{
   background:#0b0e17;
-  box-shadow:0 0 25px #00ffff88;
+  border-radius:20px;
+  padding:18px;
   text-align:center;
 }
 
-input{
+input,button{
   width:100%;
   padding:13px;
-  margin-top:10px;
-  border-radius:12px;
+  border-radius:14px;
   border:none;
-  background:#12162a;
-  color:#fff;
+  margin-top:10px;
   text-align:center;
 }
-
+input{background:#12162a;color:#fff}
 button{
-  width:100%;
-  padding:13px;
-  margin-top:10px;
-  border:none;
-  border-radius:12px;
   background:linear-gradient(90deg,#00ffff,#ff00ff);
   font-weight:800;
   color:#000;
 }
 
-#msg{
-  min-height:18px;
-  margin-top:8px;
-  font-size:13px;
-  color:#ff6b6b;
+#msg{font-size:12px;color:#ff6b6b;margin-top:6px}
+
+iframe{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
-  <b>ThinkMay Access</b><br><br>
-  <input id="tokenInput" placeholder="Masukkan Token Akses">
-  <button onclick="login()">MASUK APLIKASI</button>
-  <div id="msg"></div>
+<div id="gate">
+  <div class="box" id="popupBox">
+    <div class="inner">
+      <h3>ThinkMay Access</h3>
+      <input id="tokenInput" placeholder="Masukkan Token">
+      <button onclick="login()">MASUK</button>
+      <div id="msg"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-/* =========================
-   CONFIG
-========================= */
 const API = "https://tokengta5.lmore000013.workers.dev";
-const CLOUD_URL = "https://thinkmay.net";
 
-/* =========================
-   AUTO HIDE CURSOR
-========================= */
-(function(){
-  let hidden = false;
+const saved = localStorage.getItem("thinkmay_token");
+if(saved) validate(saved);
 
-  function hide(){
-    if(hidden) return;
-    document.documentElement.style.cursor = "none";
-    document.body.style.cursor = "none";
-    hidden = true;
-  }
-
-  function show(){
-    document.documentElement.style.cursor = "";
-    document.body.style.cursor = "";
-    hidden = false;
-  }
-
-  // hide secepat mungkin
-  hide();
-
-  // jaga-jaga saat focus / blur
-  window.addEventListener("blur", show);
-  window.addEventListener("focus", hide);
-})();
-
-/* =========================
-   TOKEN LOGIN
-========================= */
 function login(){
-  const token = tokenInput.value.trim();
-  if(!token){
-    msg.innerText = "Masukkan token";
-    return;
-  }
+  const t = tokenInput.value.trim();
+  if(!t){ msg.innerText="Masukkan token"; return; }
+  validate(t);
+}
 
-  msg.innerText = "⏳ Verifikasi token...";
-
+function validate(token){
   fetch(API,{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ token })
+    body:JSON.stringify({token})
   })
   .then(r=>r.json())
   .then(res=>{
     if(!res.ok){
-      msg.innerText =
-        res.msg==="EXPIRED" ? "⏰ Token habis" :
-        res.msg==="USED" ? "🚫 Token sudah dipakai" :
-        "❌ Token salah";
+      localStorage.removeItem("thinkmay_token");
+      msg.innerText = "❌ Token tidak valid / habis";
       return;
     }
-
-    // kasih delay dikit biar WebView siap
-    setTimeout(()=>{
-      location.replace(CLOUD_URL);
-    }, 300);
+    localStorage.setItem("thinkmay_token",token);
+    openCloud(res.exp);
   })
-  .catch(()=>{
-    msg.innerText="⚠ Server error";
-  });
+  .catch(()=>msg.innerText="⚠ Server error");
+}
+
+function openCloud(exp){
+  popupBox.classList.add("closing");
+  setTimeout(()=>{
+    gate.style.display="none";
+
+    // ==== MASUK MODE CLOUD ====
+    document.body.classList.add("cloud-active");
+
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `<iframe id="cloudFrame" src="https://thinkmay.net"></iframe>`
+    );
+
+    lockPointer();
+  },350);
+}
+
+/* ===== POINTER LOCK (ANDROID FRIENDLY) ===== */
+function lockPointer(){
+  const el = document.documentElement;
+  if(el.requestPointerLock){
+    el.requestPointerLock();
+  }
+  document.addEventListener("touchstart",()=>{
+    if(document.body.classList.contains("cloud-active")){
+      el.requestPointerLock?.();
+    }
+  },{once:true});
 }
 </script>
 
