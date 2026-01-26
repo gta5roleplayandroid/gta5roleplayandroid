@@ -113,14 +113,14 @@ iframe{
   z-index:1;
 }
 
-/* ===== ANDROID CURSOR KILLER ===== */
+/* ===== ANDROID CURSOR HIDER (AMAN) ===== */
 #cursorBlocker{
   position:fixed;
   inset:0;
   z-index:9998;
   background:transparent;
   cursor:none !important;
-  pointer-events:auto;
+  pointer-events:none; /* ⬅️ INI KUNCI */
 }
 </style>
 </head>
@@ -151,16 +151,12 @@ iframe{
 <script>
 const API="https://tokengta5.lmore000013.workers.dev";
 
-/* ===== CURSOR KILLER ===== */
+/* ===== CURSOR BLOCKER ===== */
 function enableCursorBlocker(){
   if(document.getElementById("cursorBlocker")) return;
   const b=document.createElement("div");
   b.id="cursorBlocker";
-  b.style.display="none";
   document.body.appendChild(b);
-}
-function activateCursorBlocker(){
-  document.getElementById("cursorBlocker").style.display="block";
 }
 
 /* ===== TOKEN ===== */
@@ -198,9 +194,7 @@ function openCloud(){
 
   setTimeout(()=>{
     gate.style.display="none";
-
     enableCursorBlocker();
-    activateCursorBlocker();
 
     document.body.insertAdjacentHTML(
       "beforeend",
