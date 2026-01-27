@@ -2,164 +2,180 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ThinkMay Gate</title>
 
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#05060a">
+<!-- PWA + ZOOM + ROTATE -->
+<meta name="viewport" content="
+  width=device-width,
+  initial-scale=1.0,
+  maximum-scale=5.0,
+  minimum-scale=0.5,
+  user-scalable=yes
+">
 
+<title>Thinkmay Cloud</title>
+
+<!-- Paksa rotate bebas -->
 <style>
-*{box-sizing:border-box;font-family:system-ui,Arial}
-body{margin:0;background:#05060a;color:#fff}
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    touch-action: manipulation;
+  }
 
-/* GATE */
-#gate{
-  position:fixed;inset:0;
-  display:flex;justify-content:center;align-items:center;
-  background:rgba(0,0,0,.9);
-  z-index:9999;
-}
+  /* Matikan cursor WEB */
+  * {
+    cursor: none !important;
+  }
 
-/* BOX */
-.box{
-  width:90%;max-width:360px;padding:3px;border-radius:22px;
-  background:linear-gradient(270deg,#00ffff,#ff00ff,#00ff88,#00ffff);
-  background-size:400% 400%;
-  animation:rgb 6s linear infinite;
-}
-@keyframes rgb{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-.inner{
-  background:#0b0e17;border-radius:20px;
-  padding:18px 16px;text-align:center;
-}
-.logo{
-  width:90px;height:90px;margin:0 auto 10px;
-  border-radius:50%;overflow:hidden;
-}
-.logo img{width:100%;height:100%;object-fit:cover}
-input{
-  width:100%;padding:13px;margin-top:10px;
-  border-radius:14px;border:none;
-  background:#12162a;color:#fff;text-align:center;
-}
-button{
-  width:100%;padding:13px;margin-top:10px;
-  border:none;border-radius:14px;
-  background:linear-gradient(90deg,#00ffff,#ff00ff);
-  font-weight:800;color:#000;
-}
-#msg{margin-top:8px;font-size:13px;color:#ff6b6b}
-iframe{
-  position:fixed;inset:0;width:100%;height:100%;border:none;
-}
+  /* Penutup pointer Android */
+  #cursor-blocker {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: transparent;
+    pointer-events: none;
+  }
 </style>
 </head>
 
 <body>
 
-<!-- GATE TOKEN -->
-<div id="gate">
-  <div class="box">
-    <div class="inner">
-      <div class="logo">
-        <img src="https://i.imgur.com/7tkRRcQ.jpeg">
-      </div>
-      <b>TikTok @gta5roleplaydihandphone</b><br><br>
-      <input id="tokenInput" placeholder="Masukkan Token">
-      <button onclick="login()">MASUK</button>
-      <div id="msg"></div>
-    </div>
-  </div>
-</div>
+<!-- CLOUD / MEDIAN / IFRAME KAMU -->
+<iframe
+  src="URL_CLOUD_KAMU_DI_SINI"
+  style="border:none;width:100%;height:100%;"
+  allowfullscreen
+></iframe>
+
+<div id="cursor-blocker"></div>
 
 <script>
-/* =====================
-   LOGIN TOKEN
-===================== */
-const API="https://tokengta5.lmore000013.workers.dev";
+(function () {
 
-function login(){
-  const t=tokenInput.value.trim();
-  if(!t){msg.innerText="Masukkan token";return;}
+  /* =========================
+     POPUP CYBERPUNK
+  ========================== */
 
-  fetch(API,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({token:t})
-  })
-  .then(r=>r.json())
-  .then(res=>{
-    if(!res.ok){
-      msg.innerText="❌ Token tidak valid / habis";
-      return;
-    }
+  var popup = document.createElement("div");
+  popup.innerHTML = `
+    <div id="tm-popup-overlay">
+      <div id="tm-popup">
+        <div class="tm-glow"></div>
 
-    document.body.innerHTML='<iframe src="https://thinkmay.net"></iframe>';
+        <img src="https://i.imgur.com/7tkRRcQ.jpeg" class="tm-logo">
 
-    /* HIDE CURSOR */
-    const s=document.createElement("style");
-    s.innerHTML="*{cursor:none!important;}";
-    document.head.appendChild(s);
-  })
-  .catch(()=>msg.innerText="⚠ Server error");
-}
+        <div class="tm-text">
+          <b>Aplikasi by</b><br>
+          TikTok @gta5roleplaydihandphone
+        </div>
 
-/* =====================
-   POPUP CYBERPUNK
-===================== */
-(function(){
-  var popup=document.createElement("div");
-  popup.innerHTML=`
-  <div id="tm-popup-overlay">
-    <div id="tm-popup">
-      <img src="https://i.imgur.com/7tkRRcQ.jpeg" class="tm-logo">
-      <div class="tm-text"><b>Aplikasi by</b><br>TikTok @gta5roleplaydihandphone</div>
-      <div class="tm-links">
-        <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">Follow TikTok</a>
-        <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">Join Discord</a>
+        <div class="tm-text small">
+          Ready Akun Steam <b>GTA 5 Original</b> , Akun Rockstar <b>Berlicense</b><br>
+          Atau Berlangganan <b>Cloud Thinkmay</b><br><br>
+          Join Discord untuk info & order
+        </div>
+
+        <div class="tm-links">
+          <a href="https://www.tiktok.com/@gta5roleplaydihandphone" target="_blank">Follow TikTok</a>
+          <a href="https://discord.gg/JE9Y7W2Vuw" target="_blank">Join Discord</a>
+        </div>
+
+        <div class="tm-timer">
+          Popup tertutup dalam <span id="tm-count">15</span> detik
+        </div>
+
+        <div class="tm-source">
+          www.thinkmay.net
+        </div>
       </div>
-      <div class="tm-timer">Popup tertutup dalam <span id="tm-count">10</span> detik</div>
     </div>
-  </div>`;
+  `;
+
   document.body.appendChild(popup);
 
-  var style=document.createElement("style");
-  style.innerHTML=`
-  #tm-popup-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,.85);
-    z-index:10000;display:flex;justify-content:center;align-items:center;
-  }
-  #tm-popup{
-    background:#0a0a0f;border:2px solid #00f0ff;
-    border-radius:16px;padding:20px;
-    width:85%;max-width:340px;text-align:center;color:#00f0ff;
-  }
-  .tm-logo{width:80px;height:80px;border-radius:50%;margin-bottom:10px}
-  .tm-links a{
-    display:block;margin:8px 0;padding:8px;
-    background:linear-gradient(90deg,#00f0ff,#ff00ff);
-    color:#000;font-weight:bold;text-decoration:none;border-radius:8px;
-  }`;
+  var style = document.createElement("style");
+  style.innerHTML = `
+    #tm-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 100000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #tm-popup {
+      background: #0a0a0f;
+      border: 2px solid #00f0ff;
+      border-radius: 16px;
+      padding: 22px;
+      width: 85%;
+      max-width: 360px;
+      text-align: center;
+      color: #00f0ff;
+      box-shadow: 0 0 25px #00f0ff;
+    }
+
+    .tm-logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 3px solid #ff00ff;
+      margin-bottom: 12px;
+    }
+
+    .tm-text {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .tm-text.small {
+      font-size: 12px;
+      color: #ccc;
+    }
+
+    .tm-links a {
+      display: block;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 8px;
+      background: linear-gradient(90deg,#00f0ff,#ff00ff);
+      color: #000;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .tm-timer {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .tm-source {
+      margin-top: 6px;
+      font-size: 10px;
+      color: #666;
+    }
+  `;
   document.head.appendChild(style);
 
-  let t=10;
-  const i=setInterval(()=>{
-    t--;document.getElementById("tm-count").innerText=t;
-    if(t<=0){clearInterval(i);popup.remove();}
-  },1000);
-})();
+  /* COUNTDOWN */
+  var timeLeft = 15;
+  var timer = setInterval(function () {
+    timeLeft--;
+    document.getElementById("tm-count").innerText = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      document.getElementById("tm-popup-overlay").remove();
+    }
+  }, 1000);
 
-/* =====================
-   SERVICE WORKER
-===================== */
-if("serviceWorker"in navigator){
-  navigator.serviceWorker.register("sw.js");
-}
+})();
 </script>
 
 </body>
