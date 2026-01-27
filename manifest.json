@@ -1,10 +1,11 @@
 {
-  "name": "GTA 5 Roleplay Android",
-  "short_name": "GTA RP",
+  "name": "ThinkMay App",
+  "short_name": "ThinkMay",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#05060a",
+  "theme_color": "#05060a",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",
