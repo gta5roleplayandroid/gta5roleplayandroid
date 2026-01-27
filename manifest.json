@@ -1,7 +1,7 @@
 {
-  "name": "GTA5 Roleplay Android",
-  "short_name": "GTA5RP",
-  "start_url": "index.html",
+  "name": "GTA 5 Roleplay Android",
+  "short_name": "GTA RP",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
