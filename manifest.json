@@ -1,20 +1,20 @@
 {
   "name": "ThinkMay App",
   "short_name": "ThinkMay",
-  "start_url": "/gta5roleplayandroid/index.html",
+  "start_url": "/gta5roleplayandroid/",
   "scope": "/gta5roleplayandroid/",
   "display": "standalone",
   "background_color": "#05060a",
   "theme_color": "#05060a",
-  "orientation": "portrait",
+  "orientation": "any",
   "icons": [
     {
-      "src": "/gta5roleplayandroid/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/gta5roleplayandroid/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
