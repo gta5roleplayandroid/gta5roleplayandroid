@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ThinkMay Gate</title>
 
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#05060a">
+
 <style>
 *{box-sizing:border-box;font-family:system-ui,Arial}
 body{
@@ -141,21 +145,25 @@ function login(){
       return;
     }
 
-    /* HIDE KURSOR ANDROID TOTAL */
+    /* HIDE KURSOR ANDROID */
     document.body.style.cursor="none";
     document.documentElement.style.cursor="none";
-
     const s=document.createElement("style");
     s.innerHTML="*{cursor:none!important;}";
     document.head.appendChild(s);
 
-    /* MASUK CLOUD TANPA REDIRECT */
+    /* MASUK CLOUD */
     document.body.innerHTML =
       '<iframe src="https://thinkmay.net"></iframe>';
   })
   .catch(()=>{
     msg.innerText="⚠ Server error";
   });
+}
+
+/* REGISTER SERVICE WORKER */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
 }
 </script>
 
